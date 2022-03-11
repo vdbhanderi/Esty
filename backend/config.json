@@ -1,0 +1,10 @@
+{
+    "DB":{
+        "host":"estynewdb.cb1ycgh0w0rf.us-east-1.rds.amazonaws.com",
+        "username":"admin",
+        "password":"Passb00k",
+        "port":3306,
+        "database":"test_db"
+
+    }
+}

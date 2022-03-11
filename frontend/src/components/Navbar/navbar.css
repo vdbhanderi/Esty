@@ -1,0 +1,36 @@
+.bi-heart,.bi-person-circle, .bi-cart4{
+    font-size: 1.6rem;
+    color: black;
+    margin:auto;
+
+}
+.bi-box-arrow-in-right{
+color: red;
+font-size: 1.6rem;
+margin-left: 30px;
+}
+.bi-search{
+  font-size: 1.6rem;
+}
+
+.ms5 {
+  margin-left: 100px;
+}
+h1{
+  color: chocolate;
+}
+.emailLabel{
+    float: left;
+    margin-left: 2px;
+}
+.modal-dialog{
+     width: 380px;
+}
+.loginButton{
+    width: 345px;
+}
+#modalFooter{padding-right:70px}
+.btnSpace{margin-left: 10px;}
+#navbarDropdown{
+  color: black;
+}

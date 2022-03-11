@@ -1,0 +1,23 @@
+import axios from 'axios';
+//import { USER_LOGIN, USER_LOGOUT } from '../constant-types';
+//import apiHost from '../../apiHost';
+
+export const userLogin = (loginInfo) => (dispatch) => {
+  console.log("login dispatch")
+  axios.defaults.withCredentials = true;
+  axios.post(`http://localhost:3000/login`, loginInfo)
+    .then((response) => dispatch({
+      type: 'USER_LOGIN',
+      payload: response.data,
+    }))
+    .catch((error) => {
+      if (error.response && error.response.data) {
+        return dispatch({   
+          type: 'USER_LOGIN',
+          payload: error.response.data,
+        });
+      }
+    });
+};
+
+export const userLogout = () => (dispatch) => dispatch({ type: 'USER_LOGOUT' });
