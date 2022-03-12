@@ -1,4 +1,4 @@
-import React,{ useState }  from "react";
+import React,{  }  from "react";
 import { Link } from 'react-router-dom';
 import {
     // Formik, FormikHelpers, FormikProps, Form, Field, FieldProps,
@@ -6,10 +6,12 @@ import {
 } from 'formik';
 import cookie from 'react-cookies';
 import { Navigate } from 'react-router';
-import { useDispatch, useSelector,connect } from 'react-redux';
+//import { useDispatch, useSelector,connect } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import './navbar.css'
 import * as Yup from "yup";
 import { userLogin } from "../../Actions/loginAction";
+import { Axios } from "axios";
 const LoginSchema = Yup.object().shape({
     password: Yup.string()
         .min(2, 'Too Short!')
@@ -70,6 +72,55 @@ export default function NavBar() {
         this.setState({
             redirectVar: <Navigate to="/upcomingorders" />
         })
+        Axios.post("http://localhost:3001/api/insert", {
+            username: details.username,
+            email: details.email,
+            password: details.password,
+          })
+          .then((response) => {
+            console.log("response status is " + response.status);
+            if (response.status === 200) {
+              //setuser({ ...user, redirect: "profile" });
+              console.log("status is 200 redirect page");
+              console.log("signup response api" + response.data);
+              window.location.reload();
+              cookie.save("auth", true, {
+                path: "/",
+                httpOnly: false,
+                maxAge: 90000,
+              });
+              cookie.save("id", response.data.id, {
+                path: "/",
+                httpOnly: false,
+                maxAge: 90000,
+              });
+              cookie.save("name", response.data.name, {
+                path: "/",
+                httpOnly: false,
+                maxAge: 90000,
+              });
+              cookie.save("email", response.data.email, {
+                path: "/",
+                httpOnly: false,
+                maxAge: 90000,
+              });
+              cookie.save("defaultcurrency", response.data.currency, {
+                path: "/",
+                httpOnly: false,
+                maxAge: 90000,
+              });
+              cookie.save("timezone", "American/Los_Angeles", {
+                path: "/",
+                httpOnly: false,
+                maxAge: 90000,
+              });
+            }
+          })
+          .catch(
+             err=>{
+             alert("Your email has already been registered !");
+          })
+        
     }
    // render() {
         let navLogin = null;
@@ -97,7 +148,7 @@ export default function NavBar() {
             // }
         }
         let authPanel = null
-        if (!cookie.load('auth')) {
+        if (cookie.load('auth')) {
             // redirectVar = <Navigate to="/login"/>
             authPanel = (
                 <div className="collapse navbar-collapse" id="navbarNav">
@@ -112,7 +163,8 @@ export default function NavBar() {
                             {/* <button className="btn btn-outline" type="submit"> <Link to='/favourite'><i className="bi bi-person-circle"></i></Link></button> */}
                             <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <li><a className="dropdown-item" href="/profile">My Profile</a></li>
-                                <li><a className="dropdown-item" href="/purchase">My Purchase</a></li>
+                                <li><a className="dropdown-item" href="/product">My Purchase</a></li>
+                                <li><a className="dropdown-item" href="/cart">Cart</a></li>
 
                                 {/* <li><Link to='/profile'>My Purchase</Link></li> */}
 
@@ -122,7 +174,7 @@ export default function NavBar() {
                             <button className="btn btn-outline" type="submit"> <Link to='/cart'><i className="bi bi-cart4"></i></Link></button>
                         </li>
                         <li className="d-inline">
-                            <button className="btn" type="submit"> <Link to='/about'><i className="bi bi-box-arrow-in-right"></i></Link></button>
+                            <button className="btn" type="submit"> <Link to='/about'><i className="bi bi-box-arrow-in-right" onClick={handleLogout}></i></Link></button>
                         </li>
                     </ul>
                 </div>
@@ -208,7 +260,11 @@ export default function NavBar() {
                                 <div className="modal-body">
                                     <h6 className="fw-lighter">Registration is easy.</h6>
                                     <Formik
-                                    
+                                    initialValues={{
+                                        regEmail: '',
+                                        regPassword: '',
+                                        name:''
+                                      }}
                                       //  initialValues={this.state}
                                         validationSchema={RegisterSchema}
                                         onSubmit={(values, actions) => {
