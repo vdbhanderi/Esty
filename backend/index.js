@@ -1,12 +1,11 @@
 const app = require("./app");
 const mysql = require('mysql2');
+const con = require('./databse');
 const bodyParser = require('body-parser');
 const passport = require("passport");
-//require('./passport')(passport)
 //const jwt = require("jsonwebtoken");
-//const config = require("./config");
 const cookieParser = require('cookie-parser')
-const constant=require('./config.json')
+const config=require('./config.json')
 const path = require('path');
 const fs = require('fs');
 app.set('view engine', 'ejs');
@@ -16,11 +15,6 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-//routes
-const login=require("./routes/login")
-const dashboard=require("./routes/dashboard");
-const { promiseImpl } = require("ejs");
-
 app.get('/',(req,res)=>{
     res.render('login')
 })
@@ -28,18 +22,7 @@ app.listen(3000,()=>{
     console.log("listening to port 3000")
 })
 
-const con=mysql.createPool({
-    host:"estynewdb.cb1ycgh0w0rf.us-east-1.rds.amazonaws.com",
-    user:'admin',
-    password:"Phoneb00k",
-    port:3306,
-    database:"esty",
 
-})
-con.getConnection(error => {
-    if (error) throw error;
-    console.log("Successfully connected to the database.");
-  });
   
 
   app.post('/login',  function(req,res){

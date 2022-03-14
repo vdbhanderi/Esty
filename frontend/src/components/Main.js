@@ -7,6 +7,8 @@ import Product from '../components/Product/product';
 import Cart from '../components/Cart/cart';
 import Purchase from '../components/Purchase/purchase';
 import Favourite from './Favourite/favourite';
+import  CreateShopName from './Shop/createShopName';
+import  ShopHome from './Shop/shopHome';
 
 class MainRoutes extends Component {
     render() {
@@ -21,6 +23,8 @@ class MainRoutes extends Component {
                     <Route path="/purchase" element={<Purchase/>} />
                     <Route path="/dashboard" element={<DashBoard/>} />
                     <Route path="/favourite" element={<Favourite/>} />
+                    <Route path="/createShopName" element={<CreateShopName/>} />
+                    <Route path="/ShopHome/:id" element={<ShopHome/>} />
 
                 </Routes>
 

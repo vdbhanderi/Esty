@@ -4,9 +4,10 @@ var cors = require("cors");
 var bodyParser = require("body-parser");
 var cookieParser = require("cookie-parser");
 const config = require("./config.json");
-
 const fileupload = require("express-fileupload");
-
+const login=require("./routes/login")
+const shop=require("./routes/shop")
+const dashboard=require("./routes/dashboard");
 
 app.use(fileupload());
 app.use(bodyParser.json());
@@ -28,5 +29,8 @@ app.use(function(req, res, next) {
   res.setHeader("Cache-Control", "no-cache");
   next();
 });
+//routes
 
+//app.use(login)
+app.use(shop)
 module.exports = app;

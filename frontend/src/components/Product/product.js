@@ -1,16 +1,14 @@
 import React, { Component } from "react";
 // import {Link} from "react-router-dom";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+//import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import axios from 'axios';
 import './product.css';
 ///import rootUrl from "../config/settings";
 //import swal from "sweetalert"
-import user_image from "../../images/user_defaultimage.png"
+//import user_image from "../../images/user_defaultimage.png"
 import NavBar from '../Navbar/navbar'
 
-const phoneRegExp = /^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/
-const zipRegEx = /^[0-9]{5}(?:-[0-9]{4})?$/
 
 const UpdateProfileSchema = Yup.object().shape({
     username: Yup.string()
@@ -81,7 +79,7 @@ export default class Product extends Component {
                 <div class="container">
                     <div class="product-content product-wrap clearfix product-deatil">
 
-                        <div class="card mb-3" >
+                        <div class="card mb-3 profileCard" >
                             <div class="row g-0 bottomPad">
                                 <div class="col-md-6 customOverlay">
                                     <img src={this.state.salecount} class="figure-img img-fluid rounded customImg" alt="..." />
