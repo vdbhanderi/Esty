@@ -3,6 +3,7 @@ var app = express();
 var cors = require("cors");
 var bodyParser = require("body-parser");
 var cookieParser = require("cookie-parser");
+const config = require("./config.json");
 
 const fileupload = require("express-fileupload");
 
@@ -10,11 +11,11 @@ const fileupload = require("express-fileupload");
 app.use(fileupload());
 app.use(bodyParser.json());
 app.use(cookieParser());
-app.use(cors({ origin: "http://localhost:3001", credentials: true }));
+app.use(cors({ origin: config.frontendURL, credentials: true }));
 
 //Allow Access Control
 app.use(function(req, res, next) {
-  res.setHeader("Access-Control-Allow-Origin", "http://localhost:3001");
+  res.setHeader("Access-Control-Allow-Origin", config.frontendURL);
   res.setHeader("Access-Control-Allow-Credentials", "true");
   res.setHeader(
     "Access-Control-Allow-Methods",
@@ -27,6 +28,5 @@ app.use(function(req, res, next) {
   res.setHeader("Cache-Control", "no-cache");
   next();
 });
-
 
 module.exports = app;

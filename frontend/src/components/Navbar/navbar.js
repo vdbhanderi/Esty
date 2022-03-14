@@ -7,11 +7,10 @@ import {
 import cookie from 'react-cookies';
 import { Navigate } from 'react-router';
 //import { useDispatch, useSelector,connect } from 'react-redux';
-import { useDispatch } from 'react-redux';
 import './navbar.css'
 import * as Yup from "yup";
 import { userLogin } from "../../Actions/loginAction";
-import { Axios } from "axios";
+import axios from "axios";
 const LoginSchema = Yup.object().shape({
     password: Yup.string()
         .min(2, 'Too Short!')
@@ -20,7 +19,7 @@ const LoginSchema = Yup.object().shape({
         loginEmail: Yup.string().email('Invalid email').required('Required'),
 });
 const RegisterSchema = Yup.object().shape({
-    name: Yup.string()
+    firstname: Yup.string()
         .min(2, 'Too Short!')
         .max(50, 'Too Long!')
         .required('Required'),
@@ -54,28 +53,71 @@ export default function NavBar() {
     //   };
     const handleLogout = () => {
         // cookie.remove('cookie', { path: '/' })
+        console.log("Inside logout");
+
         localStorage.removeItem('accountType')
-        localStorage.removeItem('token')
+        localStorage.removeItem('auth')
         localStorage.clear();
+        cookie.remove("auth")
+        
+       // window.location.href = "/";
+        window.location.reload();
+
     }
-   const dispatch = useDispatch();
     const submitLogin = (details) => {
         console.log("Inside submit login", details);
-        dispatch(userLogin(details));
-       // this.props.userLogin(details);
-        this.setState({
-           // redirectVar: <Navigate to="/upcomingorders" />
-        })
+       axios.post("http://localhost:3000/api/login", {
+        email: details.loginEmail,
+        password: details.password,
+      })
+      .then((response) => {
+        console.log("response status is " + response.status);
+        if (response.status === 200) {
+          //setuser({ ...user, redirect: "profile" });
+          console.log("status is 200 redirect page");
+          console.log("signup response api" + response.data);
+          window.location.reload();
+          cookie.save("auth", true, {
+            path: "/",
+            httpOnly: false,
+            maxAge: 90000,
+          });
+          cookie.save("id", response.data.id, {
+            path: "/",
+            httpOnly: false,
+            maxAge: 90000,
+          });
+          cookie.save("name", response.data.name, {
+            path: "/",
+            httpOnly: false,
+            maxAge: 90000,
+          });
+          cookie.save("email", response.data.email, {
+            path: "/",
+            httpOnly: false,
+            maxAge: 90000,
+          });
+          cookie.save("defaultcurrency", response.data.currency, {
+            path: "/",
+            httpOnly: false,
+            maxAge: 90000,
+          });
+         
+        }
+      })
+      .catch(
+         err=>{
+         alert("username or password is not correct");
+      })
+    
     }
    const submitRegister = (details) => {
-        console.log("Inside submit login", details);
-        this.setState({
-            redirectVar: <Navigate to="/upcomingorders" />
-        })
-        Axios.post("http://localhost:3001/api/insert", {
-            username: details.username,
-            email: details.email,
-            password: details.password,
+        console.log("Inside submit register", details);
+      
+        axios.post("http://localhost:3000/api/register", {
+            firstname: details.firstname,
+            email: details.regEmail,
+            password: details.regPassword,
           })
           .then((response) => {
             console.log("response status is " + response.status);
@@ -109,11 +151,7 @@ export default function NavBar() {
                 httpOnly: false,
                 maxAge: 90000,
               });
-              cookie.save("timezone", "American/Los_Angeles", {
-                path: "/",
-                httpOnly: false,
-                maxAge: 90000,
-              });
+             
             }
           })
           .catch(
@@ -148,6 +186,8 @@ export default function NavBar() {
             // }
         }
         let authPanel = null
+       //  let redirectVar = <Navigate to="/"/>
+
         if (cookie.load('auth')) {
             // redirectVar = <Navigate to="/login"/>
             authPanel = (
@@ -174,7 +214,7 @@ export default function NavBar() {
                             <button className="btn btn-outline" type="submit"> <Link to='/cart'><i className="bi bi-cart4"></i></Link></button>
                         </li>
                         <li className="d-inline">
-                            <button className="btn" type="submit"> <Link to='/about'><i className="bi bi-box-arrow-in-right" onClick={handleLogout}></i></Link></button>
+                            <button className="btn" type="submit"> <i className="bi bi-box-arrow-in-right" onClick={handleLogout}></i></button>
                         </li>
                     </ul>
                 </div>
@@ -263,7 +303,7 @@ export default function NavBar() {
                                     initialValues={{
                                         regEmail: '',
                                         regPassword: '',
-                                        name:''
+                                        firstname:''
                                       }}
                                       //  initialValues={this.state}
                                         validationSchema={RegisterSchema}
@@ -276,11 +316,11 @@ export default function NavBar() {
                                         {({ touched, errors }) => (
                                             <Form>
                                                 <div className="mb-3">
-                                                    <label htmlFor="name" className="form-label emailLabel fw-bolder">Full Name</label>
-                                                    <Field type="text" className={`form-control ${touched.name && errors.name ? "is-invalid" : ""}`} id="name" name='name' placeholder="James Bond" />
+                                                    <label htmlFor="firstname" className="form-label emailLabel fw-bolder">Full Name</label>
+                                                    <Field type="text" className={`form-control ${touched.firstname && errors.firstname ? "is-invalid" : ""}`} id="firstname" name='firstname' placeholder="James Bond" />
                                                     <ErrorMessage
                                                         component="div"
-                                                        name="name"
+                                                        name="firstname"
                                                         className="invalid-feedback"
                                                     />
                                                 </div>
@@ -338,15 +378,3 @@ export default function NavBar() {
         );
    // }
 }
-// const mapStateToProps = (state) => ({
-    
-//     loginStateStore: state.login
-// })
-// const mapDispatchToProps=(dispatch)=>{
-//     return {
-//         submitLogin: (details) => dispatch(userLogin(details))
-//     };
-    
-//   }
-//connect(mapStateToProps, mapDispatchToProps)(NavBar)
-//export default NavBar;
