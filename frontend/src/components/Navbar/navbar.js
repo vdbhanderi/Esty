@@ -230,7 +230,7 @@ export default function NavBar() {
                         </button>
                     </div>
                     <div className="modal fade" id="LoginModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                        <div className="modal-dialog rounded-pill">
+                        <div className="modal-dialog rounded-pill customModalDialog">
                             <div className="modal-content">
                                 <div className="modal-header">
                                     <h5 className="modal-title" id="exampleModalLabel ">Sign in</h5>
@@ -289,7 +289,7 @@ export default function NavBar() {
                         </div>
                     </div>
                     <div className="modal fade" id="RegisterModal" tabIndex={-1} aria-labelledby="exampleModalLabel" aria-hidden="true">
-                        <div className="modal-dialog">
+                        <div className="modal-dialog customModalDialog">
                             <div className="modal-content">
                                 <div className="modal-header">
                                     <h5 className="modal-title" id="exampleModalLabel">Register</h5>

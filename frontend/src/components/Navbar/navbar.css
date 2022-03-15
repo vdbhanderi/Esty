@@ -23,7 +23,7 @@ color: chocolate;
   float: left;
   margin-left: 2px;
 }
-.modal-dialog{
+.customModalDialog{
    width: 380px;
 }
 .loginButton{

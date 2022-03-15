@@ -10,10 +10,10 @@ export default function Footer() {
  // const [count, setCount] = useState(0);
 
   return (
-    <footer class="text-center text-lg-start bg-light text-muted" style={footerstyle}>
-    <div class="text-center p-4">
+    <footer className="text-center text-lg-start bg-light text-muted" style={footerstyle}>
+    <div className="text-center p-4">
       © 2022 Copyright:
-      <a class="text-reset fw-bold" href="https://SJSU.com/">SJSU</a>
+      <a className="text-reset fw-bold" href="https://SJSU.com/">SJSU</a>
     </div>
   </footer>
   );

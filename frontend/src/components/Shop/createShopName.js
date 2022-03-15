@@ -28,7 +28,6 @@ export default class CreateShopName extends Component {
         }
         this.enableNextButton = this.enableNextButton.bind(this)
         this.createShop = this.createShop.bind(this)
-        let redirect = null;
     }
 
     async componentDidMount() {
@@ -61,7 +60,12 @@ export default class CreateShopName extends Component {
         //             alert("Book Id exists")
         //         }
         //     });
-
+        let shopID = localStorage.getItem('shopId');
+        if (shopID) {
+            this.setState({
+                redirect: <Navigate to={`/shopHome/${shopID}`} />
+            })
+        }
         console.log("state updated", this.state)
 
     }
@@ -78,17 +82,15 @@ export default class CreateShopName extends Component {
                     this.setState({
                         isAvailiable: true,
                     })
-
                     this.enableNextButton()
                 }
-                // else if(response.status === 404){
                 else {
                     this.setState({
                         isAvailiable: false
                     })
                 }
                 this.setState({
-                    shopName:data.shopName,
+                    shopName: data.shopName,
                     isUpdated: true
                 })
                 console.log("updated Code : ", this.state.isUpdated);
@@ -108,12 +110,14 @@ export default class CreateShopName extends Component {
         await axios.post('http://localhost:3000/api/createShop', data)
             .then(response => {
                 console.log("Status Code : ", response.status);
+                const shopID = response.data.shopId;
+                console.log("Shop ID", shopID)
+                localStorage.setItem("shopId", shopID)
                 if (response.status === 200) {
-                    let url = `/shopHome/${1}`
+                    let url = `/shopHome/${shopID}`
                     this.setState({
                         redirect: <Navigate to={url} />
                     })
-
                 }
 
             });

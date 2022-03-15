@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 // import {Link} from "react-router-dom";
 //import { Formik, Form, Field, ErrorMessage } from "formik";
-import * as Yup from "yup";
+//import * as Yup from "yup";
 import axios from 'axios';
 import './product.css';
 ///import rootUrl from "../config/settings";
@@ -10,12 +10,12 @@ import './product.css';
 import NavBar from '../Navbar/navbar'
 
 
-const UpdateProfileSchema = Yup.object().shape({
-    username: Yup.string()
-        .required("userName is required"),
+// const UpdateProfileSchema = Yup.object().shape({
+//     username: Yup.string()
+//         .required("userName is required"),
 
 
-});
+// });
 
 export default class Product extends Component {
     constructor(props) {
