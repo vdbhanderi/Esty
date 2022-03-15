@@ -28,7 +28,7 @@ class DashBoard extends Component {
 
         }
 
-        axios.get('http://localhost:3001/itemList', data)
+        axios.get('http://localhost:3001/api/itemList', data)
             .then((response) => {
                 //update the state with the response data
                 this.setState({

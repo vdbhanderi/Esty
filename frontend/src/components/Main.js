@@ -24,7 +24,7 @@ class MainRoutes extends Component {
                     <Route path="/dashboard" element={<DashBoard/>} />
                     <Route path="/favourite" element={<Favourite/>} />
                     <Route path="/createShopName" element={<CreateShopName/>} />
-                    <Route path="/ShopHome/:id" element={<ShopHome/>} />
+                    <Route path="/shopHome/:id" element={<ShopHome/>} />
 
                 </Routes>
 

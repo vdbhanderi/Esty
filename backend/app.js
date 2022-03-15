@@ -33,4 +33,5 @@ app.use(function(req, res, next) {
 
 //app.use(login)
 app.use(shop)
+app.use(login)
 module.exports = app;

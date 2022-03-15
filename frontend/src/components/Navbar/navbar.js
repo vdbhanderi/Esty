@@ -5,11 +5,9 @@ import {
     Formik, Form, Field, ErrorMessage
 } from 'formik';
 import cookie from 'react-cookies';
-import { Navigate } from 'react-router';
 //import { useDispatch, useSelector,connect } from 'react-redux';
 import './navbar.css'
 import * as Yup from "yup";
-import { userLogin } from "../../Actions/loginAction";
 import axios from "axios";
 const LoginSchema = Yup.object().shape({
     password: Yup.string()
