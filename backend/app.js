@@ -7,6 +7,7 @@ const config = require("./config.json");
 const fileupload = require("express-fileupload");
 const login=require("./routes/login")
 const shop=require("./routes/shop")
+const favourite=require("./routes/favourite")
 const dashboard=require("./routes/dashboard");
 
 app.use(fileupload());
@@ -34,4 +35,6 @@ app.use(function(req, res, next) {
 //app.use(login)
 app.use(shop)
 app.use(login)
+app.use(favourite)
+app.use(dashboard)
 module.exports = app;

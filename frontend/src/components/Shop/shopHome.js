@@ -7,21 +7,22 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 
 
-
 const UpdateShopSchema = Yup.object().shape({
-    itemName: Yup.string()
-        .required("ItemName is required"),
-    category: Yup.string()
-        .required("category is required"),
-    description: Yup.string()
-        .required("description is required"),
     price: Yup.string()
-        .required("price is required"),
+        .required("userName is required"),
     quantity: Yup.string()
         .required("quantity is required"),
-    
+    itemName: Yup.string()
+        .required("Item Name is required")
+        .min(4, "Item names must have 4–20 characters")
+        .max(20, "Item names must have 4–20 characters"),
+    description: Yup.string()
+        .required("description is required")
+        .min(5, "description must have 4–20 characters")
+        .max(20, "description must have 4–20 characters"),
 
 });
+
 export default class ShopHome extends Component {
     constructor(props) {
         super(props)
@@ -33,6 +34,7 @@ export default class ShopHome extends Component {
             shopEmail: "",
             shopPhone: "",
             isOwner: false,
+            isAdd: true,
             price: '',
             description: '',
             category: '',
@@ -40,12 +42,13 @@ export default class ShopHome extends Component {
             quantity: '',
             itemImage: '',
             categoriesList: [],
-            newcat:'',
+            newcat: '',
             userId: 6 //localStorage.getItem('userId')
         }
         this.profileUpdate = this.profileUpdate.bind(this);
         this.changeOption = this.changeOption.bind(this);
         this.UpdateItem = this.UpdateItem.bind(this);
+        this.AddItem = this.AddItem.bind(this);
     }
     //get the shop data from backend  
     async componentDidMount() {
@@ -121,8 +124,8 @@ export default class ShopHome extends Component {
             });
     }
     UpdateItem = async (details) => {
-        console.log("Inside check Avaliability submit", details);
-        
+        console.log("Inside Update Item", details);
+
         await axios.post('http://localhost:3000/api/updateItem', details)
             .then(response => {
                 console.log("Status Code : ", response.status);
@@ -142,11 +145,47 @@ export default class ShopHome extends Component {
                 console.log("updated Code : ", this.state.isUpdated);
             });
     }
-    changeOption=(e)=>{
+    AddItem = async (details) => {
+        console.log("Inside Update Item", details);
+        details['shopId']=localStorage.getItem('shopId')
+        await axios.post('http://localhost:3000/api/insertItem', details)
+            .then(response => {
+                console.log("Status Code : ", response.status);
+                if (response.status === 200) {
+                    this.setState({
+                        isAvailiable: true,
+                    })
+                }
+                else {
+                    this.setState({
+                        isAvailiable: false
+                    })
+                }
+                this.setState({
+                    isUpdated: true
+                })
+                console.log("updated Code : ", this.state.isUpdated);
+            });
+    }
+    changeOption = (e) => {
         console.log(e.target.value)
-        if(e.target.value==='6'){
+        console.log(document.getElementById('category').value)
+        if (e.target.value === '6') {
             document.getElementById('newCategory').style.display = "";
         }
+
+    }
+    changeAddupdateValue = (e) => {
+        if (e.target.name === 'Add') {
+            this.setState({
+                isAdd: true
+            })
+            return
+        }
+        this.setState({
+             isAdd: false
+        })
+
     }
     render() {
         let itemrows = this.state.itemList.map(item => {
@@ -157,7 +196,7 @@ export default class ShopHome extends Component {
                     <td className="border-0 align-middle"><strong>{item.price}</strong></td>
                     <td className="border-0 align-middle"><strong>{item.totalSale}</strong></td>
                     {(this.state.isOwner && !item.itemName) ?
-                        <td className="border-0 align-middle"><button className="btn btn-primary" id="" name='' data-bs-toggle="modal" data-bs-target="#editModal" type="submit">Edit Item</button>
+                        <td className="border-0 align-middle"><button className="btn btn-primary" id="" name='edit' data-bs-toggle="modal" data-bs-target="#editModal" type="submit" onClick={this.changeAddupdateValue}>Edit Item</button>
                         </td>
                         : null
                     }
@@ -169,7 +208,7 @@ export default class ShopHome extends Component {
         let categories = this.state.categoriesList.length > 0
             && this.state.categoriesList.map((item, i) => {
                 return (
-                    <option key={i} value={item.categoryId}>{item.categoryName}</option>
+                    <option key={item.categoryId} value={item.categoryId}>{item.categoryName}</option>
                 )
             }, this);
         return (
@@ -221,7 +260,7 @@ export default class ShopHome extends Component {
                                     <p className="h2 fw-bold  p-3">Items list</p>
                                     <div className='text-end p-1'>
 
-                                        <button className="btn btn-dark" id="" name='' data-bs-toggle="modal" data-bs-target="#editModal" type="submit">Add Item</button>
+                                        <button className="btn btn-dark" id="" name='Add' data-bs-toggle="modal" onClick={this.changeAddupdateValue} data-bs-target="#editModal" type="submit">Add Item</button>
                                     </div>
                                     <div className="table-responsive">
                                         <table className="table">
@@ -271,12 +310,13 @@ export default class ShopHome extends Component {
                                     category: '',
                                     itemImage: '',
                                     newCat: '',
+                                    color: ''
                                 }
                                 }
 
                                 validationSchema={UpdateShopSchema}
                                 onSubmit={(values, actions) => {
-                                    this.UpdateItem(values)
+                                    this.state.isAdd?this.UpdateItem(values):this.UpdateItem(values)
                                     console.log({ values, actions });
                                     // alert(JSON.stringify(values, null, 2));
                                 }}
@@ -316,15 +356,27 @@ export default class ShopHome extends Component {
                                                         className="invalid-feedback"
                                                     />
                                                 </div>
-                                              
                                                 <div className="mb-3 form-group">
-                                                    <label className="small mb-1" htmlFor="category">Category</label>
-                                                    <Field as="select" name="category" className='form-control' onChange={this.changeOption}>
+                                                    <label className="small mb-1" htmlFor="category">Description</label>
+                                                    <Field as='select' className={`form-control ${touched.category && errors.category ? "is-invalid" : ""}`} id="description" name="category" placeholder="Enter description" >
+
+                                                        {categories}
+                                                    </Field>
+                                                    <ErrorMessage
+                                                        component="div"
+                                                        name="category"
+                                                        className="invalid-feedback"
+                                                    />
+                                                </div>
+
+                                                {/* <div className="mb-3 form-group">
+                                                    <label className="small mb-1" >Category</label>
+                                                    <Field as='select' name="color" id='category' className='form-control' >
                                                         {categories}
 
                                                     </Field>
-                                                </div>
-                                                <div className="mb-3 form-group" id='newCategory' style={{ display: 'none'}}>
+                                                </div> */}
+                                                <div className="mb-3 form-group" id='newCategory' style={{ display: 'none' }}>
                                                     <label className="small mb-1" htmlFor="newCat">New Category Name</label>
                                                     <Field className={`form-control ${touched.newCat && errors.newCat ? "is-invalid" : ""}`} id="newCat" name="newCat" type="text" placeholder="Enter new category" />
                                                     <ErrorMessage
@@ -354,7 +406,7 @@ export default class ShopHome extends Component {
                                             </div>
                                         </div>
                                         <div className="modal-footer">
-                                            <button type="submit" className="btn btn-primary">Save changes</button>
+                                            <button type="submit" className="btn btn-primary">Update</button>
                                         </div>
 
                                     </Form>
