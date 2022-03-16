@@ -32,14 +32,14 @@ router.post('/api/getShopName', function (req, res) {
     });
 });
 router.post('/api/getItemListbyShopID', function (req, res) {
-    console.log("inside the shop Name")
+    console.log("inside the get Item list by shop Id")
     console.log(req.body)
     console.log(req.params)
-    const userId = req.body.userId;
-    console.log(userId)
+    const shopId = req.body.shopId;
+    console.log(shopId)
 
-    const sqlget = "Select * from Items WHERE shopID=?";
-    con.query(sqlget, [userId], (error, result) => {
+    const sqlget = "Select * from Items i,Shop s WHERE s.shopId=i.shopId and s.shopId=?";
+    con.query(sqlget, [shopId], (error, result) => {
         if (!error) {
             console.log("inside itemList query");
             console.log(result);
@@ -65,11 +65,11 @@ router.post('/api/getShopDetails', function (req, res) {
     console.log("inside the shop deatils")
     console.log(req.body)
     console.log(req.params)
-    const shopID = req.body.shopID;
-    console.log(shopID)
+    const shopId = req.body.shopId;
+    console.log(shopId)
 
     const sqlget = "Select * from Shop WHERE shopId=?";
-    con.query(sqlget, [shopID], (error, result) => {
+    con.query(sqlget, [shopId], (error, result) => {
         if (!error) {
             console.log("inside itemList query");
             console.log(result);
@@ -167,49 +167,38 @@ router.post('/api/getCategories', function (req, res) {
     });
 });
 
-function addnewCategory1(categoryName) {
-    console.log("inside new category")
-    var sqlInsertForNewCategory = "insert into Category (categoryName) values(?)";
-    con.query(sqlInsertForNewCategory, [categoryName], (err, result) => {
-         console.log(result.insertId)
-         console.log("inside sqlinsert for new category" + err);
-        if (!err) {
-            return 
-        }
-         console.log(result)
-    })
-}
-let addnewCategory =(categoryName,category)=>{
-    console.log("Entered function");
-    return new Promise((resolve ,reject)=>{
+let addnewCategory = (categoryName, category) => {
+    console.log("Entered add new cateogry");
+    console.log("Entered function", categoryName);
+    console.log(categoryName != '')
+    return new Promise((resolve, reject) => {
         setTimeout(
-            ()=>{
+            () => {
                 console.log("Inside the promise");
-                console.log(categoryName!==null)
-                if(categoryName!==null){
+                if (categoryName !== '') {
                     console.log("inside new category")
                     var sqlInsertForNewCategory = "insert into Category (categoryName) values(?)";
                     con.query(sqlInsertForNewCategory, [categoryName], (err, result) => {
-                         console.log("inside sqlinsert for new category" + err);
+                        console.log("inside sqlinsert for new category" + err);
                         if (!err) {
                             resolve(result.insertId);
-                            return 
+                            return
                         }
-                         console.log(result)
-                         reject("Rejected")
+                        console.log(result)
+                        reject("Rejected")
                     })
                 }
-                else{
+                else {
                     resolve(category);
-                }     
-            } , 2000
+                }
+            }, 2000
         );
     });
 };
-  router.post("/api/updateItem", (req, res) => {
+router.post("/api/updateItem", (req, res) => {
 
-    console.log("inside update Item", req.body);
-    const itemName = req.body.username;
+  //  console.log("inside update Item", req.body);
+    const itemName = req.body.itemName;
     const description = req.body.description;
     const quantity = req.body.quantity;
     const itemId = req.body.itemId;
@@ -217,41 +206,32 @@ let addnewCategory =(categoryName,category)=>{
     var category = req.body.category;
     const newCat = req.body.newCat;
     const itemImage = req.body.itemImage;
-   
-    addnewCategory(newCat,category).then((newCategoryId)=>{
-        console.log("response",res)
+    console.log(req.body.itemId)
+    addnewCategory(newCat, category).then((newCategoryId) => {
         var sqlUpdate =
-        "update items set itemName=? and description=? and quantity=? and price=? and category=? and itemImage=? where itemId=?";
-    con.query(sqlUpdate, [itemName, description, quantity, price, newCategoryId, itemImage, itemId], (err, result) => {
-        if (!err) {
-            console.log(result)
-            if (result.length == 1 && req.body.password == result[0].password) {
-                userData = {
-                 //   id: result[0].id,
-                };
-                res.status(200).send(JSON.stringify(userData));
+            "update Items set itemName=?, description=? , quantity=? , price=?,  category=? , itemImage=? where itemId=?";
+        con.query(sqlUpdate, [itemName, description, quantity, price, newCategoryId, itemImage, itemId], (err, result) => {
+            if (!err) {
+                console.log(result)
+
+                res.status(200).send("Updated");
+
             } else {
+                console.log(err);
                 res.writeHead(204, {
                     "Content-Type": "text/plain",
                 });
-                res.end("Invalid credentials");
+                res.status(404);
+                res.end("Database issues");
             }
-        } else {
-            console.log(err);
-            res.writeHead(204, {
-                "Content-Type": "text/plain",
-            });
-            res.status(404);
-            res.end("Database issues");
-        }
-    });
+        });
     })
-   
+
 });
 router.post("/api/AddItem", (req, res) => {
 
     console.log("inside add Item", req.body);
-    const itemName = req.body.username;
+    const itemName = req.body.itemName;
     const description = req.body.description;
     const quantity = req.body.quantity;
     const shopId = req.body.shopId;
@@ -260,34 +240,63 @@ router.post("/api/AddItem", (req, res) => {
     const newCat = req.body.newCat;
     const itemImage = req.body.itemImage;
 
-    addnewCategory(newCat,category).then((newCategoryId)=>{
-        console.log("response",res)
+    addnewCategory(newCat, category).then((newCategoryId) => {
+        console.log("response", res)
         var sqlUpdate =
-        "insert into Items (itemName, description, quantity, price, category, itemImage,shopId) Values (?,?,?,?,?,?,?)";
-    con.query(sqlUpdate, [itemName, description, quantity, price, newCategoryId, itemImage, shopId], (err, result) => {
-        if (!err) {
-            console.log(result)
-            if (result.length == 1 && req.body.password == result[0].password) {
-                
-                res.status(200).send();
+            "insert into Items (itemName, description, quantity, price, category, itemImage,shopId) Values (?,?,?,?,?,?,?)";
+        con.query(sqlUpdate, [itemName, description, quantity, price, newCategoryId, itemImage, shopId], (err, result) => {
+            if (!err) {
+                console.log(result)
+                if (result.length == 1 && req.body.password == result[0].password) {
+
+                    res.status(200).send();
+                } else {
+                    res.writeHead(204, {
+                        "Content-Type": "text/plain",
+                    });
+                    res.end("Something broken");
+                }
             } else {
+                console.log(err);
                 res.writeHead(204, {
                     "Content-Type": "text/plain",
                 });
-                res.end("Something broken");
+                res.status(404);
+                res.end("Database issues");
             }
-        } else {
-            console.log(err);
+        });
+    })
+
+});
+router.post('/api/getItemDetails', function (req, res) {
+    console.log("inside the shop deatils")
+    console.log(req.body)
+    console.log(req.params)
+    const itemId = req.body.itemId;
+    console.log(itemId)
+
+    const sqlget = "Select * from Items WHERE itemId=?";
+    con.query(sqlget, [itemId], (error, result) => {
+        if (!error) {
+            console.log("get one item details query");
+            console.log(result);
+            console.log(result.length == 1)
+            if (result.length == 1) {
+                console.log(result);
+                res.status(200).send(JSON.stringify(result));
+                return
+            }
             res.writeHead(204, {
                 "Content-Type": "text/plain",
             });
-            res.status(404);
-            res.end("Database issues");
+            res.end("");
+
+        } else {
+            console.log(error)
+            res.status(500).send('Something broke!')
+
         }
     });
-    })
-   
 });
-
 
 module.exports = router

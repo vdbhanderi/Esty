@@ -5,11 +5,12 @@ import '../Cart/cart.css';
 import axios from 'axios';
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
+import $ from 'jquery';
 
 
 const UpdateShopSchema = Yup.object().shape({
     price: Yup.string()
-        .required("userName is required"),
+        .required("price is required"),
     quantity: Yup.string()
         .required("quantity is required"),
     itemName: Yup.string()
@@ -42,7 +43,7 @@ export default class ShopHome extends Component {
             quantity: '',
             itemImage: '',
             categoriesList: [],
-            newcat: '',
+            newCat: '',
             userId: 6 //localStorage.getItem('userId')
         }
         this.profileUpdate = this.profileUpdate.bind(this);
@@ -53,7 +54,7 @@ export default class ShopHome extends Component {
     //get the shop data from backend  
     async componentDidMount() {
         let data = {
-            shopID: localStorage.getItem('shopId')
+            shopId: localStorage.getItem('shopId')
         }
         //var userId=this.props.id
         // var userId=1//localStorage.getItem("userId")
@@ -85,17 +86,11 @@ export default class ShopHome extends Component {
         await axios.post('http://localhost:3000/api/getCategories', data)
             .then((response) => {
                 //update the state with the response data
-                console.log('category Deatils', response.data)
+              //  console.log('category Deatils', response.data)
                 this.setState({
                     categoriesList: response.data
                 });
-                console.log("first", response.data)
-                if (response.data[0].userId === this.state.userId) {
-                    this.setState({
-                        isOwner: true
-                    })
-                    document.getElementById('editShop').style.visibility = "visible";
-                }
+               
             });
     }
     profileUpdate = async (details) => {
@@ -146,9 +141,9 @@ export default class ShopHome extends Component {
             });
     }
     AddItem = async (details) => {
-        console.log("Inside Update Item", details);
         details['shopId']=localStorage.getItem('shopId')
-        await axios.post('http://localhost:3000/api/insertItem', details)
+        console.log("Inside insert Item", details);
+        await axios.post('http://localhost:3000/api/AddItem', details)
             .then(response => {
                 console.log("Status Code : ", response.status);
                 if (response.status === 200) {
@@ -166,26 +161,48 @@ export default class ShopHome extends Component {
                 })
                 console.log("updated Code : ", this.state.isUpdated);
             });
+            window.location.reload()
+
+            $('#editModal').hide();
+            $('#editModal').dispose();
     }
     changeOption = (e) => {
         console.log(e.target.value)
-        console.log(document.getElementById('category').value)
         if (e.target.value === '6') {
             document.getElementById('newCategory').style.display = "";
         }
+        else{
+            document.getElementById('newCategory').style.display = "none";
+        }
+        this.setState({...this.state,category: e.target.value});
+      
 
     }
-    changeAddupdateValue = (e) => {
+    changeAddupdateValue = async (e) => {
         if (e.target.name === 'Add') {
             this.setState({
                 isAdd: true
             })
             return
         }
+        console.log(e.target.id)
+        await axios.post('http://localhost:3000/api/getItemDetails', {itemId:e.target.id})
+            .then((response) => {
+                //update the state with the response data
+                console.log('item List', response.data[0])
+                this.setState({
+                    price: response.data[0].price,
+                    description: response.data[0].description,
+                    itemName: response.data[0].itemName,
+                    category: response.data[0].category,
+                    itemImage: response.data[0].itemImage,
+                    itemId: response.data[0].itemId,
+                    quantity: response.data[0].quantity
+                });
+            });
         this.setState({
              isAdd: false
         })
-
     }
     render() {
         let itemrows = this.state.itemList.map(item => {
@@ -195,8 +212,13 @@ export default class ShopHome extends Component {
                     <td className="border-0 align-middle"><strong>{item.itemName}</strong></td>
                     <td className="border-0 align-middle"><strong>{item.price}</strong></td>
                     <td className="border-0 align-middle"><strong>{item.totalSale}</strong></td>
-                    {(this.state.isOwner && !item.itemName) ?
-                        <td className="border-0 align-middle"><button className="btn btn-primary" id="" name='edit' data-bs-toggle="modal" data-bs-target="#editModal" type="submit" onClick={this.changeAddupdateValue}>Edit Item</button>
+                    {
+                       (this.state.isOwner && item.itemName) ?
+                       <td className="border-0 align-middle " style={{display:'none'}}>{item.itemId}</td>
+                       : null
+                    }
+                    {(this.state.isOwner && item.itemName) ?
+                        <td className="border-0 align-middle"><button className="btn btn-primary" id={item.itemId} name='edit' data-bs-toggle="modal" data-bs-target="#editModal" type="submit" onClick={this.changeAddupdateValue}>Edit Item</button>
                         </td>
                         : null
                     }
@@ -302,22 +324,14 @@ export default class ShopHome extends Component {
                                 <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                             </div>
                             <Formik
-                                initialValues={{
-                                    price: '',
-                                    description: '',
-                                    itemName: '',
-                                    quantity: '',
-                                    category: '',
-                                    itemImage: '',
-                                    newCat: '',
-                                    color: ''
-                                }
+                                enableReinitialize
+                                initialValues={this.state
                                 }
 
                                 validationSchema={UpdateShopSchema}
                                 onSubmit={(values, actions) => {
-                                    this.state.isAdd?this.UpdateItem(values):this.UpdateItem(values)
-                                    console.log({ values, actions });
+                                    this.state.isAdd?this.AddItem(values):this.UpdateItem(values)
+                                    //  console.log({ values, actions });
                                     // alert(JSON.stringify(values, null, 2));
                                 }}
                             >
@@ -357,8 +371,8 @@ export default class ShopHome extends Component {
                                                     />
                                                 </div>
                                                 <div className="mb-3 form-group">
-                                                    <label className="small mb-1" htmlFor="category">Description</label>
-                                                    <Field as='select' className={`form-control ${touched.category && errors.category ? "is-invalid" : ""}`} id="description" name="category" placeholder="Enter description" >
+                                                    <label className="small mb-1" htmlFor="category">Category</label>
+                                                    <Field as='select' className={`form-control ${touched.category && errors.category ? "is-invalid" : ""}`} id="category" name="category" placeholder="Enter description" onChange={this.changeOption} value={this.state.category}>
 
                                                         {categories}
                                                     </Field>

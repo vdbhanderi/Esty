@@ -40,7 +40,7 @@ router.post('/api/removeFavourite', function (req, res) {
     console.log(userId)
     console.log(itemId)
 
-    const sqlget = "delete from FavouriteItems WHERE userId=? and itemId=?";
+ const sqlget = "delete from FavouriteItems WHERE userId=? and itemId=?";
     con.query(sqlget, [userId,itemId], (error, result) => {
         if (!error) {
             console.log("inside itemList query");
@@ -81,7 +81,5 @@ router.post("/api/insertFavourite", (req, res) => {
         }
     });
 });
-
-
 
 module.exports = router

@@ -1,4 +1,4 @@
-const mysql = require('mysql2');
+const mysql = require('mysql');
 const con=mysql.createPool({
     host:"estynewdb.cb1ycgh0w0rf.us-east-1.rds.amazonaws.com",
     user:'admin',
