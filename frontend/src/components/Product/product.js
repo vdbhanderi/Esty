@@ -19,6 +19,7 @@ export default class Product extends Component {
             description: "",
             itemid: '',
             itemImage: "",
+            shopName:'',
             salecount: '',
             itemName: '',
             price: "",
@@ -41,6 +42,7 @@ export default class Product extends Component {
                         description: response.data.description,
                         itemid: data.itemid,
                         itemName: response.data.itemName,
+                        shopName: response.data.shopName,
                         itemImage: response.data.itemImage,
                         salecount: response.data.totalSale,
                         price: response.data.price,
@@ -63,6 +65,7 @@ export default class Product extends Component {
             item: {
                 itemId: this.state.itemid,
                 itemName: this.state.itemName,
+                itemImage: this.state.itemImage,
                 price: this.state.price,
                 quantity: quantity,
             },
@@ -102,13 +105,13 @@ export default class Product extends Component {
                                 </div>
                                 <div className="col-md-6">
                                     <div className="card-body text-start">
-                                        <h4 className="card-title fw-bolder">My product: {this.state.itemName}</h4>
+                                        <h4 className="card-title fw-bolder">Product : {this.state.itemName}</h4>
                                         <div className="border-bottom">
 
-                                            <h6 className="card-subtitle mb-2 text-muted   d-inline">Shop Name</h6>  <h6 className="card-subtitle mb-2 text-muted   d-inline" >| Total Sales:{this.state.salecount}</h6>
+                                            <h6 className="card-subtitle mb-2 text-muted   d-inline">Shop : {this.state.shopName}</h6>  <h6 className="card-subtitle mb-2 text-muted   d-inline" >| Total Sales:{this.state.salecount}</h6>
                                         </div>
-                                        <p className="card-text">With supporting text below as a natural lead-in to additional content.With supporting text below as a natural lead-in to additional content.With supporting text below as a natural lead-in to additional content.With supporting text below as a natural lead-in to additional content.With supporting text below as a natural lead-in to additional content.</p>
-                                        <p className="card-text">{this.state.description}</p>
+                                        <p className="card-text"><strong>Description : </strong> {this.state.description}</p>
+                                        <p className="card-text"></p>
                                         <h6 className="card-subtitle mb-2 d-inline">Price: </h6><h6 className="card-subtitle mb-2 d-inline"> $</h6> <h6 className="card-subtitle mb-2 d-inline">{this.state.price}</h6>
                                         <div className="mb-3 col-md-3">
                                             <label htmlFor="quantity" className="form-label">Quantity:</label>

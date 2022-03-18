@@ -9,20 +9,41 @@ router.post('/api/getItem', function (req, res) {
     console.log(itemId)
 
     const sqlget = "Select * from Items WHERE itemId=?";
+    const sqlget2 = "Select * from Shop WHERE shopId=?";
     con.query(sqlget, [itemId], (error, result) => {
         if (!error) {
             console.log("inside login query");
             console.log(result);
+            var data;
             console.log(result.length == 1)
             if (result.length == 1) {
-                console.log(result);
-                res.status(200).send(JSON.stringify(result[0]));
-                return
+                con.query(sqlget2, [result[0].shopId], (error, result2) => {
+                    if (!error) {
+                        console.log("inside login query");
+                        console.log(result2);
+                        console.log(result2.length == 1)
+                        console.log(result);
+                         data = {
+                            price: result[0].price,
+                            shopName: result2[0].shopName,
+                            itemName: result[0].itemName,
+                            itemImage: result[0].itemImage,
+                            itemId: result[0].itemId,
+                            description: result[0].description,
+                            totalSale: result[0].totalSale,
+
+                        }
+                        console.log("data",data)
+                        res.status(200).send(JSON.stringify(data));
+                        return
+                    } else {
+                        console.log(error)
+                    }
+
+                })
+                   
             }
-            res.writeHead(204, {
-                "Content-Type": "text/plain",
-            });
-            res.end("Shop name is taken");
+           
 
         } else {
             console.log(error)

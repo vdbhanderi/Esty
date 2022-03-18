@@ -113,6 +113,8 @@ router.post("/api/addToCart", (req, res) => {
             items = cartExistingData.concat(item)
             console.log("combined Array", items)
             items=JSON.stringify(items)
+            console.log("main Array", items)
+
              con.query(sqlUpdate, [items, purchaseDate, cartId, userId], (err, result) => {
                  console.log("inside sql update " + err);
                  if (!err) {

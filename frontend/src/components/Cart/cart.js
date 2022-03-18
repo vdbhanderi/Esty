@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import NavBar from '../Navbar/navbar';
 import './cart.css';
 import axios from 'axios';
+import { Navigate } from 'react-router';
 class Cart extends Component {
     constructor(props) {
         super(props)
@@ -13,7 +14,8 @@ class Cart extends Component {
             itemname: '',
             quantity: '',
             totalprice: "",
-            isLoaded: false
+            isLoaded: false,
+            isAddedIntoCart: false
         }
         this.CheckOut = this.CheckOut.bind(this);
     }
@@ -31,9 +33,9 @@ class Cart extends Component {
                     var parseData = JSON.parse(response.data.items);
                     parseData = JSON.parse(response.data.items);
                     console.log(parseData)
-                    var totalprice;
+                    var totalprice=0;
                     parseData.forEach(element => {
-                        totalprice = (element.quantity * element.price)
+                        totalprice += (element.quantity * element.price)
                     });
                     this.setState({
                         totalprice: totalprice,
@@ -56,10 +58,10 @@ class Cart extends Component {
             .then((response) => {
                 if (response.status === 200) {
                     console.log(response);
-                    var parseData = JSON.parse(response.data.items);
-                    parseData = JSON.parse(response.data.items);
-                    console.log(parseData)
-                    console.log("Items", this.state.items);
+                    this.setState({
+                        isAddedIntoCart: true
+                    })
+                    localStorage.removeItem("cartId")
                 }
                 else {
                     alert("Please try Again")
@@ -84,8 +86,13 @@ class Cart extends Component {
 
             )
         })
+        var redirectVar=null
+        if (this.state.isAddedIntoCart) {
+            redirectVar = <Navigate to="/purchase" />
+        }
         return (
             <div className="">
+                {redirectVar}
                 <NavBar />
                 <div className="cart">
 
