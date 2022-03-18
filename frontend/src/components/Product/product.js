@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+
 // import {Link} from "react-router-dom";
 //import { Formik, Form, Field, ErrorMessage } from "formik";
 //import * as Yup from "yup";
@@ -9,6 +10,7 @@ import './product.css';
 //import user_image from "../../images/user_defaultimage.png"
 import NavBar from '../Navbar/navbar'
 import $ from 'jquery'
+import { Navigate } from "react-router";
 
 export default class Product extends Component {
     constructor(props) {
@@ -20,11 +22,9 @@ export default class Product extends Component {
             salecount: '',
             itemName: '',
             price: "",
-            isLoaded: false
+            isAddedIntoCart: false
         }
-
     }
-
     async componentDidMount() {
         let data = {
             username: localStorage.getItem("username"),
@@ -40,16 +40,14 @@ export default class Product extends Component {
                     this.setState({
                         description: response.data.description,
                         itemid: data.itemid,
-                        itemname: response.data.itemName,
+                        itemName: response.data.itemName,
                         itemImage: response.data.itemImage,
                         salecount: response.data.totalSale,
                         price: response.data.price,
-                        isLoaded: true
                     })
                 }
                 else {
                     this.setState({
-                        isLoaded: false
                     })
                 }
             });
@@ -59,10 +57,12 @@ export default class Product extends Component {
         console.log(this.state.price)
         const quantity = $('#quantity').val();
         const cartId = localStorage.getItem("cartId");
+        console.log(cartId)
         const userId = 4 //localStorage.getItem("userId");
         let data = {
             item: {
                 itemId: this.state.itemid,
+                itemName: this.state.itemName,
                 price: this.state.price,
                 quantity: quantity,
             },
@@ -72,15 +72,24 @@ export default class Product extends Component {
         await axios.post('http://localhost:3000/api/addToCart', data)
             .then(response => {
                 console.log("Status Code : ", response.status);
-                console.log("Status Code : ", response.data);
                 if (response.status === 200) {
-                    localStorage.setItem('cartId', response.data.cartId)
+                    console.log(response.data.insertId)
+                    localStorage.setItem('cartId', response.data.insertId);
+                    this.setState({
+                        isAddedIntoCart: true
+                    })
                 }
             });
     }
     render() {
+        console.log("cartId",localStorage.getItem('cartId'))
+        let redirectVar = null;
+        if (this.state.isAddedIntoCart) {
+            redirectVar = <Navigate to="/cart" />
+        }
         return (
             <div>
+                {redirectVar}
                 <NavBar />
                 <div className="container">
                     <div className="product-content product-wrap clearfix product-deatil">

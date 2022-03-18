@@ -15,31 +15,66 @@ class Cart extends Component {
             totalprice: "",
             isLoaded: false
         }
-
+        this.CheckOut = this.CheckOut.bind(this);
     }
- //get the books data from backend  
- componentDidMount(){
-     var data={
-          itemids:localStorage.getItem("items")
-     }
+    //get the books data from backend  
+    componentDidMount() {
+        var data = {
+            userId: 4, //localStorage.getItem("userId"),
+            cartId: localStorage.getItem("cartId")
+        }
 
-    axios.get('http://localhost:3001/getitems',data)
+        axios.post('http://localhost:3000/api/getCart', data)
             .then((response) => {
-            //update the state with the response data
-            this.setState({
-                items : this.state.items.concat(response.data) 
+                if (response.status === 200) {
+                    console.log(response);
+                    var parseData = JSON.parse(response.data.items);
+                    parseData = JSON.parse(response.data.items);
+                    console.log(parseData)
+                    var totalprice;
+                    parseData.forEach(element => {
+                        totalprice = (element.quantity * element.price)
+                    });
+                    this.setState({
+                        totalprice: totalprice,
+                        items: this.state.items.concat(parseData)
+                    });
+                    console.log("stare", this.state.items);
+                }
+                else {
+                    alert("your cart is Empty")
+                }
             });
-        });
-}
+    }
+
+    CheckOut = () => {
+        var data = {
+            userId: 4, //localStorage.getItem("userId"),
+            cartId: localStorage.getItem("cartId")
+        }
+        axios.post('http://localhost:3000/api/checkOut', data)
+            .then((response) => {
+                if (response.status === 200) {
+                    console.log(response);
+                    var parseData = JSON.parse(response.data.items);
+                    parseData = JSON.parse(response.data.items);
+                    console.log(parseData)
+                    console.log("Items", this.state.items);
+                }
+                else {
+                    alert("Please try Again")
+                }
+            });
+    }
     render() {
         let itemrows = this.state.items.map(item => {
             return (
                 <tr>
                     <th scope="row" className="border-0">
                         <div className="p-2">
-                            <img src={item.itemimage} alt="" width="70" className="img-fluid rounded shadow-sm" />
+                            {/* <img src={item.itemimage} alt="" width="70" className="img-fluid rounded shadow-sm" /> */}
                             <div className="ms-3 d-inline-block align-middle">
-                                <h5 className="mb-0"> <a href="#s" className="text-dark d-inline-block align-middle">{item.itemname}</a></h5>
+                                <h5 className="mb-0"> <a href="#s" className="text-dark d-inline-block align-middle">{item.itemName}</a></h5>
                             </div>
                         </div>
                     </th>
@@ -74,7 +109,7 @@ class Cart extends Component {
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                               {itemrows}
+                                                {itemrows}
                                             </tbody>
                                         </table>
                                     </div>
@@ -85,13 +120,13 @@ class Cart extends Component {
                                     <div className="p-4">
                                         <p className="mb-4"><em>Shipping and additional costs are calculated based on values you have entered.</em></p>
                                         <ul className="list-unstyled mb-4">
-                                            <li className="d-flex justify-content-between py-3 border-bottom"><strong className="text-muted">Order Subtotal </strong><strong>$390.00</strong></li>
-                                            <li className="d-flex justify-content-between py-3 border-bottom"><strong className="text-muted">Shipping and handling</strong><strong>$10.00</strong></li>
-                                            <li className="d-flex justify-content-between py-3 border-bottom"><strong className="text-muted">Tax</strong><strong>$0.00</strong></li>
+                                            <li className="d-flex justify-content-between py-3 border-bottom"><strong className="text-muted">Order Subtotal </strong><strong>${this.state.totalprice}</strong></li>
+                                            <li className="d-flex justify-content-between py-3 border-bottom"><strong className="text-muted">Shipping and handling</strong><strong>$10</strong></li>
+                                            <li className="d-flex justify-content-between py-3 border-bottom"><strong className="text-muted">Tax</strong><strong>$0</strong></li>
                                             <li className="d-flex justify-content-between py-3 border-bottom"><strong className="text-muted">Total</strong>
-                                                <h5 className="fw-bold">$400.00</h5>
+                                                <h5 className="fw-bold">${this.state.totalprice + 10.00}</h5>
                                             </li>
-                                        </ul><a href="/purchase" className="btn btn-dark rounded-pill py-2 d-md-block text-light">Procceed to checkout</a>
+                                        </ul><a href="/purchase" className="btn btn-dark rounded-pill py-2 d-md-block text-light" onClick={this.CheckOut}>Procceed to checkout</a>
                                     </div>
                                 </div>
                             </div>

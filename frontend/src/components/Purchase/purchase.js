@@ -18,10 +18,9 @@ export default class Purchase extends Component {
         let data = {
             useremail: localStorage.getItem("userEmail"),
             username: localStorage.getItem("username")
-
         }
 
-        axios.get('http://localhost:3001/getOrderedItems', data)
+     axios.post('http://localhost:3000/getOrderedItems', data)
             .then((response) => {
                 //update the state with the response data
                 this.setState({
