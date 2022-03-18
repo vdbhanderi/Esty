@@ -10,6 +10,7 @@ const shop=require("./routes/shop")
 const favourite=require("./routes/favourite")
 const dashboard=require("./routes/dashboard");
 const item=require("./routes/item");
+const cart=require("./routes/cart");
 //app.use(express.static('public'))
 // app.use(fileupload());
 app.use(bodyParser.json());
@@ -39,4 +40,5 @@ app.use(login)
 app.use(favourite)
 app.use(dashboard)
 app.use(item)
+app.use(cart)
 module.exports = app;

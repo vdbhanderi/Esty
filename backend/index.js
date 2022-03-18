@@ -33,31 +33,9 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage })
 
-
-app.post('/uploadImage1', function (req, res) {
-
-  upload(req, res, function (err) {
-    if (err instanceof multer.MulterError) {
-      return res.status(500).json(err)
-    } else if (err) {
-      return res.status(500).json(err)
-    }
-    return res.status(200).send(req.file)
-
-  })
-
-});
 //uplaod-file
 app.post('/uploadImage', upload.single('file'), (req, res) => {
   console.log("After multers", req.files)
-
-
-
-  //  console.log(req.files)
-  //  console.log('req.data', req.files);
-  //console.log('req.data', req);
-  //upload.single(req.files.photos)
-  //  console.log('req.photos ', req.files.photos);
   res.status(200).json({ success: 'success' })
   res.end();
 });

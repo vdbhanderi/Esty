@@ -22,16 +22,15 @@ export default class Product extends Component {
             price: "",
             isLoaded: false
         }
-  
+
     }
 
     async componentDidMount() {
         let data = {
-            useremail: localStorage.getItem("userEmail"),
             username: localStorage.getItem("username"),
             itemid: localStorage.getItem("itemId"),
         }
-        console.log("Inside get after component did mount",data.itemid);
+        console.log("Inside get after component did mount", data.itemid);
 
         await axios.post('http://localhost:3000/api/getItem', data)
             .then(response => {
@@ -55,30 +54,31 @@ export default class Product extends Component {
                 }
             });
     }
-    AddToCart=async()=>{
-         const quantity= $('.quantity').val();
-         let data = {
-            useremail: localStorage.getItem("userEmail"),
-            username: localStorage.getItem("username"),
-            itemid: localStorage.getItem("itemId"),
+    AddToCart = async () => {
+        console.log(this.state.itemid)
+        console.log(this.state.price)
+        const quantity = $('#quantity').val();
+        const cartId = localStorage.getItem("cartId");
+        const userId = 4 //localStorage.getItem("userId");
+        let data = {
+            item: {
+                itemId: this.state.itemid,
+                price: this.state.price,
+                quantity: quantity,
+            },
+            userId: userId,
+            cartId: cartId,
         }
-         await axios.post('http://localhost:3000/api/addToCart', data)
-         .then(response => {
-             console.log("Status Code : ", response.status);
-             console.log("Status Code : ", response.data);
-             if (response.status === 200) {
-                
-             }
-             else {
-                 this.setState({
-                     isLoaded: false
-                 })
-             }
-         });
+        await axios.post('http://localhost:3000/api/addToCart', data)
+            .then(response => {
+                console.log("Status Code : ", response.status);
+                console.log("Status Code : ", response.data);
+                if (response.status === 200) {
+                    localStorage.setItem('cartId', response.data.cartId)
+                }
+            });
     }
     render() {
-
-
         return (
             <div>
                 <NavBar />
@@ -88,7 +88,7 @@ export default class Product extends Component {
                         <div className="card mb-3 profileCard" >
                             <div className="row g-0 bottomPad">
                                 <div className="col-md-6 customOverlay">
-                                    <img src={this.state.itemImage} className="figure-img img-fluid rounded customImg" style={{width:'647px'}} alt="..." />
+                                    <img src={this.state.itemImage} className="figure-img img-fluid rounded customImg" style={{ width: '647px' }} alt="..." />
                                     <button className="btn"><i className="bi bi-heart"></i></button>
                                 </div>
                                 <div className="col-md-6">
@@ -102,8 +102,8 @@ export default class Product extends Component {
                                         <p className="card-text">{this.state.description}</p>
                                         <h6 className="card-subtitle mb-2 d-inline">Price: </h6><h6 className="card-subtitle mb-2 d-inline"> $</h6> <h6 className="card-subtitle mb-2 d-inline">{this.state.price}</h6>
                                         <div className="mb-3 col-md-3">
-                                            <label htmlFor="exampleFormControlInput1" className="form-label">Quantity:</label>
-                                            <input type="number" className="form-control" id="exampleFormControlInput1" min="1" placeholder="Qunatity" name='quantity'/>
+                                            <label htmlFor="quantity" className="form-label">Quantity:</label>
+                                            <input type="number" className="form-control" id="quantity" min="1" placeholder="Qunatity" name='quantity' />
                                         </div>
                                         <div className="d-grid col-md-6 d-inline">
                                             <button type="button" className="btn btn-outline-primary rounded" onClick={this.AddToCart}>

@@ -69,7 +69,7 @@ router.post("/api/insertFavourite", (req, res) => {
     const itemId = req.body.itemId;
     const userId = req.body.userId;
     const sqlInsert = "INSERT INTO FavouriteItems (itemId,userId) VALUES (?,?)";
-    con.query(sqlInsert, [shopName, userId], (err, result) => {
+    con.query(sqlInsert, [itemId, userId], (err, result) => {
         console.log("inside sql insert" + err);
         if (!err) {
             console.log("no error create shop query");

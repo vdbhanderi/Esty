@@ -12,7 +12,6 @@ class Cart extends Component {
             salecount: '',
             itemname: '',
             quantity: '',
-            profileImage: "",
             totalprice: "",
             isLoaded: false
         }
