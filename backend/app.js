@@ -4,13 +4,14 @@ var cors = require("cors");
 var bodyParser = require("body-parser");
 var cookieParser = require("cookie-parser");
 const config = require("./config.json");
-const fileupload = require("express-fileupload");
+// const fileupload = require("express-fileupload");
 const login=require("./routes/login")
 const shop=require("./routes/shop")
 const favourite=require("./routes/favourite")
 const dashboard=require("./routes/dashboard");
-
-app.use(fileupload());
+const item=require("./routes/item");
+//app.use(express.static('public'))
+// app.use(fileupload());
 app.use(bodyParser.json());
 app.use(cookieParser());
 app.use(cors({ origin: config.frontendURL, credentials: true }));
@@ -37,4 +38,5 @@ app.use(shop)
 app.use(login)
 app.use(favourite)
 app.use(dashboard)
+app.use(item)
 module.exports = app;

@@ -7,6 +7,7 @@ import Footer from "../Footer/footer";
 import { Navigate } from 'react-router';
 import NavBar from "../Navbar/navbar";
 import './dashboard.css'
+import { Link } from "react-router-dom";
 
 
 class DashBoard extends Component {
@@ -28,8 +29,9 @@ class DashBoard extends Component {
 
         }
 
-        axios.get('http://localhost:3001/api/itemList', data)
+        axios.post('http://localhost:3000/api/getItemListForDashboard',data)
             .then((response) => {
+                console.log(response)
                 //update the state with the response data
                 this.setState({
                     items: this.state.items.concat(response.data)
@@ -39,9 +41,10 @@ class DashBoard extends Component {
     handleFavourite=()=>{
            
     }
-    changeColor=()=>{
-        <Navigate to="/somewhere/else" />
-
+    changeColor=(e)=>{
+        console.log("click function");
+        console.log(e.target.id);
+        localStorage.setItem('itemId',e.target.id)
     }
 
     render() {
@@ -50,36 +53,24 @@ class DashBoard extends Component {
             return (
                 <div className="col-md-6 col-lg-4 col-xl-3">
                 <div id="product-4" className="single-product" 
-                onClick = {this.changeColor}>
-                        <div className="part-1" style={{ "background":`url(${item.itemImage}) no-repeat center`, "background-size": "cover"}}>
+              >
+                        <div className="part-1" >
+                            <Link to={`/product/${item.itemId}`}>
+
+                            <img alt='' src={`${item.itemImage}`} id={`${item.itemId}`}  style={{ "background":`no-repeat center`, "backgroundSize": "cover"}} onClick={this.changeColor}></img>
+                            </Link>
                                 <span className="new"><i className="bi bi-heart" onClick={this.handleFavourite}></i></span>	
                         </div>
                         <div className="part-2" >
                         <h3 className="product-title text-start">{item.itemname}</h3>
-						<h4 className="product-price text-start" >{item.currency}{item.price}</h4>
+						<h4 className="product-price text-start" >Price: {item.currency? item.currency.split('-')[0]:null}{item.price}</h4>
                         </div>
                 </div>
         </div>
 
             )
         })
-        //     let itemList = this.state.items.map(item => {
-        //     return (
-
-        //         <div className="col-md-6 col-lg-4 col-xl-3">
-        // 							<div id="product-4" className="single-product">
-        // 									<div className="part-1" style={{ "background-image":URL("https://i.ibb.co/cLnZjnS/2.jpg")}}>
-        // 											<span className="new"><a href="#11"><i className="bi bi-heart"></i></a></span>
-
-        // 									</div>
-        // 									<div className="part-2">
-        // 											<h3 className="product-title text-start">{item.itemname}</h3>
-        // 											<h4 className="product-price text-start" >{item.currency}{item.price}</h4>
-        // 									</div>
-        // 							</div>
-        // 					</div>
-        //     )
-        // })
+      
         return (
             <div>
                 <NavBar />

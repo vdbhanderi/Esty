@@ -6,6 +6,8 @@ import axios from 'axios';
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import $ from 'jquery';
+//import rootUrl from "../config";
+
 
 
 const UpdateShopSchema = Yup.object().shape({
@@ -120,25 +122,26 @@ export default class ShopHome extends Component {
     }
     UpdateItem = async (details) => {
         console.log("Inside Update Item", details);
+        console.log("Image", details.itemImage);
 
-        await axios.post('http://localhost:3000/api/updateItem', details)
-            .then(response => {
-                console.log("Status Code : ", response.status);
-                if (response.status === 200) {
-                    this.setState({
-                        isAvailiable: true,
-                    })
-                }
-                else {
-                    this.setState({
-                        isAvailiable: false
-                    })
-                }
-                this.setState({
-                    isUpdated: true
-                })
-                console.log("updated Code : ", this.state.isUpdated);
-            });
+        // await axios.post('http://localhost:3000/api/updateItem', details)
+        //     .then(response => {
+        //         console.log("Status Code : ", response.status);
+        //         if (response.status === 200) {
+        //             this.setState({
+        //                 isAvailiable: true,
+        //             })
+        //         }
+        //         else {
+        //             this.setState({
+        //                 isAvailiable: false
+        //             })
+        //         }
+        //         this.setState({
+        //             isUpdated: true
+        //         })
+        //         console.log("updated Code : ", this.state.isUpdated);
+        //     });
     }
     AddItem = async (details) => {
         details['shopId']=localStorage.getItem('shopId')
@@ -174,14 +177,20 @@ export default class ShopHome extends Component {
         else{
             document.getElementById('newCategory').style.display = "none";
         }
-        this.setState({...this.state,category: e.target.value});
+        this.setState({category: e.target.value});
       
 
     }
     changeAddupdateValue = async (e) => {
         if (e.target.name === 'Add') {
             this.setState({
-                isAdd: true
+                isAdd: true,
+                price: '',
+                description: '',
+                category: '',
+                itemName: '',
+                quantity: '',
+                itemImage:''
             })
             return
         }
@@ -203,6 +212,32 @@ export default class ShopHome extends Component {
         this.setState({
              isAdd: false
         })
+    }
+    
+    uploadImage = async (e) => {
+        const target = e.target;
+        const name = target.name;
+        console.log(name)
+
+        if (name === "itemImage") {
+            var profilePhoto = target.files[0];
+            console.log('2',profilePhoto);
+
+            const data = new FormData();
+            data.append('file', profilePhoto);
+            console.log(data.get("file"))
+             await axios.post('http://localhost:3000/uploadImage', data)
+                .then(response => {
+                    if (response.status === 200) {
+                        console.log("success")
+                        console.log('Profile Photo Name: ', profilePhoto.name);
+                        this.setState({
+                            itemImage: 'http://localhost:3000/download-file/' + profilePhoto.name,
+                           // itemImage: 
+                        })
+                    }
+                });
+        }
     }
     render() {
         let itemrows = this.state.itemList.map(item => {
@@ -322,7 +357,7 @@ export default class ShopHome extends Component {
                             <div className="modal-header">
                                 <h5 className="modal-title" id="exampleModalLabel">Edit Item</h5>
                                 <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
+                            </div>  
                             <Formik
                                 enableReinitialize
                                 initialValues={this.state
@@ -336,16 +371,16 @@ export default class ShopHome extends Component {
                                 }}
                             >
                                 {({ touched, errors }) => (
-                                    <Form>
+                                    <Form >
                                         <div className="modal-body">
                                             <div className="row">
 
                                                 <div className=" mb-4 mb-xl-0">
                                                     <div className="card-body rounded mx-auto d-block">
-                                                        <img className="img-account-profile rounded-circle mb-2" src="http://bootdey.com/img/Content/avatar/avatar1.png" alt="" />
+                                                        <img className="img-account-profile rounded-circle mb-2" src={this.state.itemImage} alt="" />
                                                         <div className="small font-italic text-muted mb-4">JPG or PNG no larger than 5 MB</div>
 
-                                                        <input type='file' className="" onClick={this.profileUpdate} />
+                                                        <input type='file' name='itemImage' onChange={this.uploadImage} />
                                                     </div>
                                                 </div>
 
