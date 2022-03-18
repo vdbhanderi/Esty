@@ -12,7 +12,6 @@ router.post('/api/getOrderedItems', function (req, res) {
     con.query(sqlget, [userId], (error, result) => {
         if (!error) {
             console.log("inside itemList query");
-            console.log("results", result);
             var array = [];
             console.log(result.length)
             for (var i = 0; i < result.length; i++) {
@@ -21,20 +20,21 @@ router.post('/api/getOrderedItems', function (req, res) {
                 console.log("parsedata", parsedData)
                 parsedData.forEach(element => {
 
-                    console.log("element", element)
                     var item = {
                         price: element.price,
                         quantity: element.quantity,
                         itemImage: element.itemImage,
                         itemName: element.itemName,
+                        shopName: element.shopName,
                         purchaseDate: purchaseDate,
                     }
-                    array.concat(item)
+                     console.log(item)
+                    array=array.concat(item)
                 });
                 //array
             }
 
-            console.log(result);
+            console.log("arra",array);
             if (result.length != 0) {
                 res.status(200).send(JSON.stringify(array));
                 return

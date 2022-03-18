@@ -66,6 +66,7 @@ export default class Product extends Component {
                 itemId: this.state.itemid,
                 itemName: this.state.itemName,
                 itemImage: this.state.itemImage,
+                shopName: this.state.shopName,
                 price: this.state.price,
                 quantity: quantity,
             },

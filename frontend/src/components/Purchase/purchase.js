@@ -16,13 +16,15 @@ export default class Purchase extends Component {
     //get the books data from backend  
     componentDidMount() {
         let data = {
-            useremail: localStorage.getItem("userEmail"),
-            username: localStorage.getItem("username")
+            username: localStorage.getItem("username"),
+            cartId: localStorage.getItem("cartId"),
+            userId: 4//localStorage.getItem("userId")
         }
 
-     axios.post('http://localhost:3000/getOrderedItems', data)
+     axios.post('http://localhost:3000/api/getOrderedItems', data)
             .then((response) => {
                 //update the state with the response data
+                console.log(response.data)
                 this.setState({
                     orderedItems: this.state.orderedItems.concat(response.data)
                 });
@@ -32,18 +34,18 @@ export default class Purchase extends Component {
         let itemrows = this.state.orderedItems.map(item => {
             return (
                 <tr>
-                    <th scope="row" class="border-0">
-                        <div class="p-2">
-                            <img src={item.itemimage} alt="" width="70" class="img-fluid rounded shadow-sm" />
-                            <div class="ms-3 d-inline-block align-middle">
-                                <h5 class="mb-0"> <a href="#s" class="text-dark d-inline-block align-middle">{item.itemname}</a></h5>
+                    <th scope="row" className="border-0">
+                        <div className="p-2">
+                            <img src={item.itemImage} alt="" width="70" className="img-fluid rounded shadow-sm" />
+                            <div className="ms-3 d-inline-block align-middle">
+                                <h5 className="mb-0"> <a href="#s" className="text-dark d-inline-block align-middle">{item.itemName}</a></h5>
                             </div>
                         </div>
                     </th>
-                    <td class="border-0 align-middle"><strong>{item.shopname}</strong></td>
-                    <td class="border-0 align-middle"><strong>{item.dop}</strong></td>
-                    <td class="border-0 align-middle"><strong>{item.price}</strong></td>
-                    <td class="border-0 align-middle"><strong>{item.quantity}</strong></td>
+                    <td className="border-0 align-middle"><strong>{item.shopName}</strong></td>
+                    <td className="border-0 align-middle"><strong>{item.purchaseDate}</strong></td>
+                    <td className="border-0 align-middle"><strong>{item.price}</strong></td>
+                    <td className="border-0 align-middle"><strong>{item.quantity}</strong></td>
 
                 </tr>
 
@@ -54,29 +56,29 @@ export default class Purchase extends Component {
                 <NavBar />
                 <div className="cart">
 
-                    <section class="py-5">
-                        <div class="container px-4 px-lg-5 ">
-                            <div class="row">
-                                <div class="col-lg-12 p-5 bg-white rounded shadow-sm mb-5">
-                                    <p class="h2 fw-bold  p-3">My Purchases</p>
-                                    <div class="table-responsive">
-                                        <table class="table">
+                    <section className="py-5">
+                        <div className="container px-4 px-lg-5 ">
+                            <div className="row">
+                                <div className="col-lg-12 p-5 bg-white rounded shadow-sm mb-5">
+                                    <p className="h2 fw-bold  p-3">My Purchases</p>
+                                    <div className="table-responsive">
+                                        <table className="table">
                                             <thead>
                                                 <tr>
-                                                    <th scope="col" class="border-0 bg-light">
-                                                        <div class="p-2 px-3 text-uppercase">Product</div>
+                                                    <th scope="col" className="border-0 bg-light">
+                                                        <div className="p-2 px-3 text-uppercase">Product</div>
                                                     </th>
-                                                    <th scope="col" class="border-0 bg-light">
-                                                        <div class="py-2 text-uppercase">Shop Name</div>
+                                                    <th scope="col" className="border-0 bg-light">
+                                                        <div className="py-2 text-uppercase">Shop Name</div>
                                                     </th>
-                                                    <th scope="col" class="border-0 bg-light">
-                                                        <div class="py-2 text-uppercase">Date of Purchase</div>
+                                                    <th scope="col" className="border-0 bg-light">
+                                                        <div className="py-2 text-uppercase">Date of Purchase</div>
                                                     </th>
-                                                    <th scope="col" class="border-0 bg-light">
-                                                        <div class="py-2 text-uppercase">Price</div>
+                                                    <th scope="col" className="border-0 bg-light">
+                                                        <div className="py-2 text-uppercase">Price</div>
                                                     </th>
-                                                    <th scope="col" class="border-0 bg-light">
-                                                        <div class="py-2 text-uppercase">Quantity</div>
+                                                    <th scope="col" className="border-0 bg-light">
+                                                        <div className="py-2 text-uppercase">Quantity</div>
                                                     </th>
                                                 </tr>
                                             </thead>
