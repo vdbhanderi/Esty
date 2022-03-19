@@ -4,7 +4,6 @@ import React, { Component } from "react";
 import Footer from "../Footer/footer";
 //import { Link } from 'react-router-dom';
 // import cookie from 'react-cookies';
-import { Navigate } from 'react-router';
 import NavBar from "../Navbar/navbar";
 import '../Favourite/favourite.css'
 import { Link } from "react-router-dom";
@@ -18,31 +17,83 @@ class Favourite extends Component {
             redirectVar: null
 
         }
+        this.handleFilterFavourite = this.handleFilterFavourite.bind(this);
         this.handleFavourite = this.handleFavourite.bind(this);
+
+        this.goToProduct = this.goToProduct.bind(this);
+
     }
 
     //get the books data from backend  
     componentDidMount() {
         let data = {
             useremail: localStorage.getItem("userEmail"),
-            username: localStorage.getItem("username")
+            userName: localStorage.getItem("userName"),
+            userId: 4//localStorage.getItem("userId"),
 
         }
 
-        axios.get('http://localhost:3001/favouriteList', data)
+        axios.post('http://localhost:3000/api/getFavouriteItemsbyUserID', data)
             .then((response) => {
                 //update the state with the response data
+                console.log(response.data)
                 this.setState({
                     items: this.state.items.concat(response.data)
                 });
             });
     }
-    handleFavourite = () => {
+    handleFavourite = (e) => {
+        console.log("inside favourite");
+        var itemId = e.target.id
+        console.log("itemId",itemId)
+        let data = {
+            itemId: itemId,
+            userId: 4//localStorage.getItem("userId")
+        }
+        var favId = this.state.items.filter(x => x.itemId === parseInt(itemId))[0].favouriteId
+        console.log("fav",favId)
+         if (favId == null) {
+             axios.post('http://localhost:3000/api/addFavourite', data)
+                 .then((response) => {
+                     console.log(response.data)
+                      this.setState({
+                          items: this.state.items.concat(response.data)
+                      });
+                      this.setState({
+                          items: this.state.items.concat(response.data)
+                      });
+                 });
+         }
+         else {
+             axios.post('http://localhost:3000/api/removeFavourite', data)
+                 .then((response) => {
+                     console.log(response.data) 
+             });
+         }
+         window.location.reload()
 
+       //   $(".heart").html("&#9825;");
     }
-    changeColor = () => {
-        <Navigate to="/" />
+    handleFilterFavourite = (e) => {
+        let data = {
+            useremail: localStorage.getItem("userEmail"),
+            userName: localStorage.getItem("userName"),
+            userId: 4//localStorage.getItem("userId"),
 
+        }
+
+        axios.post('http://localhost:3000/api/getFavouriteItemsbyUserID', data)
+            .then((response) => {
+                //update the state with the response data
+                console.log(response.data)
+                this.setState({
+                    items: this.state.items.concat(response.data)
+                });
+            });
+    }
+    goToProduct = (e) => {
+        console.log(e.target.id)
+        localStorage.setItem('itemId',e.target.id)
     }
 
     render() {
@@ -51,56 +102,45 @@ class Favourite extends Component {
             return (
                 <div className="col-md-6 col-lg-4 col-xl-3">
                     <div id="product-4" className="single-product"
-                        onClick={this.changeColor}>
-                        <div className="part-1" style={{ "background": `url(${item.itemImage}) no-repeat center`, "background-size": "cover" }}>
-                            <span className="new"><i className="bi bi-heart" onClick={this.handleFavourite}></i></span>
+                    >
+                        <div className="part-1" >
+                            <Link to={`/product/${item.itemId}`}>
+                                <img alt='' src={`${item.itemImage}`} id={`${item.itemId}`} style={{ "background": `no-repeat center`, "backgroundSize": "cover" }} onClick={this.goToProduct}></img>
+                            </Link>
+                            {item.favouriteId != null ? <span className="new heart" id={item.itemId} onClick={this.handleFavourite}>&#9829;</span> :
+                                <span className="new heart1" id={item.itemId} onClick={this.handleFavourite}>&#9825;</span>}
+
                         </div>
                         <div className="part-2" >
-                            <h3 className="product-title text-start">{item.itemname}</h3>
-                            <h4 className="product-price text-start" >{item.currency}{item.price}</h4>
+                            <h3 className="product-title text-start"><strong>Item Name: </strong>:{item.itemName}</h3>
+                            <h4 className="product-price text-start" ><strong>Price : </strong> {item.currency ? item.currency.split('-')[0] : null}{item.price}</h4>
                         </div>
                     </div>
                 </div>
 
             )
         })
-        //     let itemList = this.state.items.map(item => {
-        //     return (
 
-        //         <div className="col-md-6 col-lg-4 col-xl-3">
-        // 							<div id="product-4" className="single-product">
-        // 									<div className="part-1" style={{ "background-image":URL("https://i.ibb.co/cLnZjnS/2.jpg")}}>
-        // 											<span className="new"><a href="#11"><i className="bi bi-heart"></i></a></span>
-
-        // 									</div>
-        // 									<div className="part-2">
-        // 											<h3 className="product-title text-start">{item.itemname}</h3>
-        // 											<h4 className="product-price text-start" >{item.currency}{item.price}</h4>
-        // 									</div>
-        // 							</div>
-        // 					</div>
-        //     )
-        // })
         return (
             <div>
                 <NavBar />
-                <div class="card" style={{ width: "18rem", marginLeft: "80px" }}>
-                    <div class="card-body">
-                        <h5 class="card-title">Profile</h5>
-                        <h6 class="card-subtitle mb-2 text-muted">Username:{localStorage.getItem("username")}</h6>
-                        <button href="#a" class="card-link">Edit Profile</button>
+                <div className="card" style={{ width: "18rem", marginLeft: "80px" }}>
+                    <div className="card-body">
+                        <h5 className="card-title">Profile</h5>
+                        <h6 className="card-subtitle mb-2 text-muted">Username:{localStorage.getItem("username")}</h6>
+                        <Link to="/profile"><button className="card-link">Edit Profile</button></Link>
                     </div>
                 </div>
                 <div className="row">
                     <form>
                         <div className="">
-                            <input class="form-control customSearch" type="text" placeholder="Search" aria-label="Search" />
+                            <input className="form-control customSearch" type="text" placeholder="Search" aria-label="Search" onClick={this.handleFilterFavourite} style={{width:"150px"}}/>
                             {/* <button className="btnsearch"><Link to='/favourite'><i className="bi bi-search"></i></Link></button> */}
                         </div>
 
                     </form>
                 </div>
-                <section className="section-products">
+                <section className="section-products" style={{marginBottom:"100px"}}>
                     <div className="container">
                         <div className="row justify-content-center text-center">
                             <div className="col-md-8 col-lg-6">
@@ -110,67 +150,6 @@ class Favourite extends Component {
                             </div>
                         </div>
                         <div className="row">
-
-                            <div className="col-md-6 col-lg-4 col-xl-3">
-                                <div id="product-4" className="single-product"
-                                    onClick={this.changeColor}>
-                                    {/* <div className="part-1" style={{ "background": `url(.itemImage) no-repeat center`, "background-size": "cover" }}> */}
-                                    <div className="part-1" >
-                                    </div>
-                                    <div className="part-2" >
-                                        <h3 className="product-title text-start">itemname</h3>
-                                        <h4 className="product-price text-start" >currencyprice</h4>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-md-6 col-lg-4 col-xl-3">
-                                <div id="product-4" className="single-product"
-                                    onClick={this.changeColor}>
-                                    {/* <div className="part-1" style={{ "background": `url(.itemImage) no-repeat center`, "background-size": "cover" }}> */}
-                                    <div className="part-1" >
-                                    </div>
-                                    <div className="part-2" >
-                                        <h3 className="product-title text-start">itemname</h3>
-                                        <h4 className="product-price text-start" >currencyprice</h4>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-md-6 col-lg-4 col-xl-3">
-                                <div id="product-4" className="single-product"
-                                    onClick={this.changeColor}>
-                                    {/* <div className="part-1" style={{ "background": `url(.itemImage) no-repeat center`, "background-size": "cover" }}> */}
-                                    <div className="part-1" >
-                                    </div>
-                                    <div className="part-2" >
-                                        <h3 className="product-title text-start">itemname</h3>
-                                        <h4 className="product-price text-start" >currencyprice</h4>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-md-6 col-lg-4 col-xl-3">
-                                <div id="product-4" className="single-product"
-                                    onClick={this.changeColor}>
-                                    {/* <div className="part-1" style={{ "background": `url(.itemImage) no-repeat center`, "background-size": "cover" }}> */}
-                                    <div className="part-1" >
-                                    </div>
-                                    <div className="part-2" >
-                                        <h3 className="product-title text-start">itemname</h3>
-                                        <h4 className="product-price text-start" >currencyprice</h4>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-md-6 col-lg-4 col-xl-3">
-                                <div id="product-4" className="single-product"
-                                    onClick={this.changeColor}>
-                                    {/* <div className="part-1" style={{ "background": `url(.itemImage) no-repeat center`, "background-size": "cover" }}> */}
-                                    <div className="part-1" >
-                                    </div>
-                                    <div className="part-2" >
-                                        <h3 className="product-title text-start">itemname</h3>
-                                        <h4 className="product-price text-start" >currencyprice</h4>
-                                    </div>
-                                </div>
-                            </div>
                             {itemrows}
 
                         </div>

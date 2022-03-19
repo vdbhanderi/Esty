@@ -35,4 +35,31 @@ router.post('/login',  function(req,res){
       }
     });
 })
+router.post('/api/getProfile',  function(req,res){
+  console.log("inside the login")
+  console.log(req.body)
+  const userId = req.body.userId;
+  const sqlget = "Select * from Users WHERE UserId=?";
+  con.query(sqlget,[userId],(error,result)=>{
+    if (!error) {
+        console.log("inside login query");
+        console.log(result);
+        console.log(result.length == 1)
+      if (result.length == 1) {
+        console.log(result);
+        console.log(userData);
+        res.status(200).send(JSON.stringify(result[0]));
+       
+      } else {
+        res.writeHead(204, {
+          "Content-Type": "text/plain",
+        });
+        res.end("Invalid credentials");
+      }
+    } else {
+        res.status(500).send('Something broke!')
+
+    }
+  });
+})
 module.exports=router

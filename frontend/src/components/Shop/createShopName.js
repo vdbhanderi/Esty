@@ -31,11 +31,11 @@ export default class CreateShopName extends Component {
     }
 
     async componentDidMount() {
-        let data = {
-            useremail: localStorage.getItem("userEmail"),
-            username: localStorage.getItem("username"),
-            userID: localStorage.getItem("userId")
-        }
+        // let data = {
+        //     useremail: localStorage.getItem("userEmail"),
+        //     username: localStorage.getItem("username"),
+        //     userID: localStorage.getItem("userId")
+        // }
         console.log("Inside create shop name after component did mount");
 
         // axios.post('http://localhost:3000/getShopName', data)

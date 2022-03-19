@@ -9,11 +9,10 @@ router.post('/api/getFavouriteItemsbyUserID', function (req, res) {
     const userId = req.body.userId;
     console.log(userId)
 
-    const sqlget = "Select * from FavouriteItems WHERE userId=?";
+    const sqlget = "select i.*,f.favouriteId from Items i JOIN FavouriteItems f on i.itemId=f.itemId and f.userId=?";
     con.query(sqlget, [userId], (error, result) => {
         if (!error) {
             console.log("inside itemList query");
-            console.log(result);
             if (result.length != 0) {
                 console.log(result);
                 res.status(200).send(JSON.stringify(result));
@@ -32,7 +31,7 @@ router.post('/api/getFavouriteItemsbyUserID', function (req, res) {
     });
 });
 router.post('/api/removeFavourite', function (req, res) {
-    console.log("inside the shop deatils")
+    console.log("remove favourite")
     console.log(req.body)
     console.log(req.params)
     const userId = req.body.userId;
@@ -64,7 +63,7 @@ router.post('/api/removeFavourite', function (req, res) {
     });
 });
 
-router.post("/api/insertFavourite", (req, res) => {
+router.post("/api/addFavourite", (req, res) => {
     console.log("inside create shop api", req.body);
     const itemId = req.body.itemId;
     const userId = req.body.userId;
@@ -75,7 +74,7 @@ router.post("/api/insertFavourite", (req, res) => {
             console.log("no error create shop query");
             console.log(result)
             console.log(result.length)  
-                res.status(200).send(JSON.stringify(userData));
+                res.status(200).send();
         } else {
             res.status(500).send('There is some issue please try again!')
         }

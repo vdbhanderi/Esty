@@ -4,12 +4,9 @@ const router = new express.Router()
 router.post('/api/getItemListForDashboard', function (req, res) {
     console.log("inside the get Item list by shop Id")
     console.log(req.body)
-    console.log(req.params)
-    const shopId = req.body.shopId;
-    console.log(shopId)
 
-    const sqlget = "Select * from Items";
-    con.query(sqlget, [shopId], (error, result) => {
+    const sqlget = "select i.*,f.favouriteId from Items i left  JOIN FavouriteItems f on  i.itemId=f.itemId ";
+    con.query(sqlget, (error, result) => {
         if (!error) {
             console.log("inside itemList query");
             if (result.length != 0) {
