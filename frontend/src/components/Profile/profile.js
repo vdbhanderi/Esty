@@ -15,24 +15,21 @@ const zipRegEx = /^[0-9]{5}(?:-[0-9]{4})?$/
 const UpdateProfileSchema = Yup.object().shape({
     username: Yup.string()
         .required("userName is required"),
-    fullname: Yup.string()
-        .required("fullname is required"),
-    email: Yup.string()
-        .email("Invalid email address format")
-        .required("Email is required"),
-    password: Yup.string()
-        .min(8, "Password must be 8 characters at minimum")
-        .required("Password is required"),
-    phone: Yup.string()
-        .matches(phoneRegExp, 'Phone number is not valid')
-        .required("Phone number is required"),
-    address: Yup.string()
-        .required("Address is required"),
-    zip: Yup.string()
-        .matches(zipRegEx, "Zip code is not valid")
-        .required("ZIP code is required"),
- country: Yup.string()
-        .required("country is required"),
+     fullname: Yup.string()
+         .required("fullname is required"),
+     email: Yup.string()
+         .email("Invalid email address format")
+         .required("Email is required"),
+     phone: Yup.string()
+         .matches(phoneRegExp, 'Phone number is not valid')
+         .required("Phone number is required"),
+     address: Yup.string()
+         .required("Address is required"),
+     zip: Yup.string()
+         .matches(zipRegEx, "Zip code is not valid")
+         .required("ZIP code is required"),
+    //  country: Yup.string()
+    //      .required("country is required"),
 
 });
 
@@ -54,13 +51,9 @@ export default class UserProfile extends Component {
             profileImage: "",
             profileImagePreview: undefined,
             isUpdated: false
-            // restName: "xyz",
-            // restAdr:"Sample Resto Address",
-            // restZip: "55555",
-            // restPhone: "9999999999",
+           
         }
-        this.editProfile = this.editProfile.bind(this)
-        this.savechanges = this.savechanges.bind(this)
+        this.submitProfile = this.submitProfile.bind(this)
         this.handleChange = this.handleChange.bind(this);
     }
 
@@ -68,50 +61,39 @@ export default class UserProfile extends Component {
     async componentDidMount() {
         let data = {
             useremail: localStorage.getItem("userEmail"),
-            username: localStorage.getItem("username")
+            username: localStorage.getItem("username"),
+            userId: 4//localStorage.getItem("userId"),
 
         }
+        console.log(localStorage.getItem('userId'))
         console.log("Inside get profile after component did mount");
 
-        axios.post('http://localhost:3000/getProfile', data)
-            .then(response => {
-                console.log("Status Code : ", response.status);
-                if (response.status === 200) {
-                    this.setState({
-                        email: response.data.email,
-                        username: data.username,
-                        phone: response.data.phone,
-                        address: response.data.address,
-                        zip: response.data.zip,
-                        state: response.data.state,
-                        dob: response.data.dob,
-                        profileImage: response.data.profileImage,
-                        country: response.data.country,
-                        gender: response.data.gender,
-                        city: response.data.city,
-                        
-
-                        //isLoade: true
-                    })
-                }
-                else {
-                    this.setState({
-                        //    isCreated: false
-                    })
-                    alert("Book Id exists")
-                }
-            });
-        // await this.props.getProfile(data)
-        // this.setState({
-        //     email: this.props.profileStateStore.result.userEmail,
-        //     username: this.props.profileStateStore.result.userName,
-        //     phone: this.props.profileStateStore.result.userPhone,
-        //     address: this.props.profileStateStore.result.userAdr,
-        //     zip: this.props.profileStateStore.result.userZip,
-        //     profileImage: this.props.profileStateStore.result.profileImage
-        // });
+        await axios.post('http://localhost:3000/api/getProfile', data)
+        .then(response => {
+            console.log("Status Code : ", response.status);
+            console.log("Status Code : ", response.data);
+            if (response.status === 200) {
+                this.setState({
+                    fullname: response.data.firstName,//response.data.address,    
+                    email: response.data.email,//response.data.address,    
+                    zip: response.data.zip, 
+                    state: response.data.state, 
+                    gender: response.data.gender, 
+                    country: response.data.country, 
+                    address: response.data.address, 
+                    dob: response.data.dob, 
+                    phone: response.data.phone, 
+                    city: response.data.city, 
+                    username: response.data.userName, 
+                })
+            }
+            else {
+                this.setState({
+                })
+            }
+        });
         console.log("state updated", this.state)
-        console.log("Profile image name", this.profileImage);
+        //console.log("Profile image name", this.profileImage);
 
     }
 
@@ -133,7 +115,7 @@ export default class UserProfile extends Component {
                         if (profilePhoto.name) {
                             this.setState({
                                 profileImage: profilePhoto.name,
-                                profileImagePreview: "rootUrl" + "/download-file/" + profilePhoto.name
+                                profileImagePreview: "http://localhost:3000/download-file/" + profilePhoto.name
                             })
                         }
 
@@ -142,82 +124,60 @@ export default class UserProfile extends Component {
         }
     }
 
-    editProfile() {
-        var frm = document.getElementById('profile-form');
-        for (var i = 0; i < frm.length; i++) {
-            frm.elements[i].disabled = false;
-            // console.log(frm.elements[i])
-        }
-        // document.getElementById('userName').disabled = false;
-        document.getElementById('userName').focus()
-        // document.getElementById('password').style.display="block";
-        // document.getElementById('btn-edit-profile').style.display="none";
-        document.getElementById('btn-submit-profile').style.visibility = "visible";
-        document.getElementById('btn-cancel-profile').style.visibility = "visible";
-        document.getElementById('btn-edit').style.visibility = "hidden";
-        document.getElementById('profileImage').style.visibility = "visible";
-
-    }
-
 
     submitProfile = async (details) => {
         console.log("Inside profile update", details);
         const data = {
             email: details.email,
-            // userPassword : details.password,
+            userId: 4,
             username: details.username,
             phone: details.phone,
             address: details.address,
             zip: details.zip,
-            userImage: this.state.profileImage
+            gender: details.gender,
+            country: details.country,
+            state: details.state,
+            userImage: details.profileImage
         }
-        await this.props.updateProfile(data);
-        this.savechanges();
-    }
-
-    savechanges(values) {
-        console.log("Inside profile update", values);
-        var frm = document.getElementById('profile-form');
-        for (var i = 0; i < frm.length; i++) {
-            console.log(frm.elements[i])
-            frm.elements[i].disabled = true;
-        }
-        // document.getElementById('userName').focus()
-        document.getElementById('password').style.display = "none";
-        // document.getElementById('btn-edit-profile').style.display="none";
-        document.getElementById('btn-submit-profile').style.visibility = "hidden";
-        document.getElementById('btn-cancel-profile').style.visibility = "hidden";
-        document.getElementById('btn-edit').style.visibility = "visible";
-        document.getElementById('profileImage').style.visibility = "hidden";
-
+         axios.post('http://localhost:3000/api/submitProfile', data)
+         .then(response => {
+             console.log("Status Code : ", response.status);
+             if (response.status === 200) {
+                   alert("successfully Updated")
+             }
+             else {
+         
+             }
+         });
     }
 
 
     render() {
 
-        console.log("profile image preview", this.state.profileImagePreview)
-        let profileImageData = <img src={user_image} alt="logo" />
-        if (this.state.profileImagePreview) {
-            profileImageData = <img src={this.state.profileImagePreview} alt="logo" />
-        }
+        // console.log("profile image preview", this.state.profileImagePreview)
+        // let profileImageData = <img src={user_image} alt="logo" />
+        // if (this.state.profileImagePreview) {
+        //     profileImageData = <img src={this.state.profileImagePreview} alt="logo" />
+        // }
         return (
             <div>
                 <NavBar />
                 <div className="container-xl px-4 mt-4">
                     <Formik
+                    enableReinitialize
                         initialValues={{
-                            username: "",
-                            phone: "",
-                            fullname: '',
-                            state: "",
-                            address: "",
-                            email: '',
-                            gender: '',
-                            country: "",
-                            zip: "",
-                            city: "",
-                            dob:"",
-                            profileImage: "",
+                            username: this.state.username,
+                            phone: this.state.phone,
+                            fullname: this.state.fullname,
+                            state: this.state.state,
+                            address:this.state.address,
+                            email: this.state.email,
+                            gender: this.state.gender,
+                            country: this.state.country,
+                            zip: this.state.zip,
+                            city: this.state.city,
+                            dob:this.state.dob,
+                           // profileImage: "",
                         }
                         }
                       
@@ -264,17 +224,17 @@ export default class UserProfile extends Component {
                                                             className="invalid-feedback"
                                                         />
                                                     </div>
-                                                    <fieldset className="form-group mb-3">
+                                                    <fieldset className="form-group mb-3" name="gender">
                                                         <div className="row">
                                                             <legend className="col-form-label pt-0 small mb-2">Gender</legend>
                                                             <div className="col-sm-3 radio mx-auto">
                                                                 <div className="form-check form-check-inline">
-                                                                    <Field className="form-check-input" type="radio" name="gender" id="inlineRadio1" />
+                                                                    <Field className="form-check-input" type="radio" name="gender" id="male" value="male"/>
                                                                     <label className="form-check-label" htmlFor="inlineRadio1">Male</label>
                                                                 </div>
 
                                                                 <div className="form-check form-check-inline">
-                                                                    <Field className="form-check-input" type="radio" name="gender" id="inlineRadio2" />
+                                                                    <Field className="form-check-input" type="radio" name="gender" id="female" value="female" />
                                                                     <label className="form-check-label" htmlFor="inlineRadio2">Female</label>
                                                                 </div>
                                                             </div>
@@ -308,15 +268,17 @@ export default class UserProfile extends Component {
                                                             <Field type="text" className="form-control" id="state" name="state" placeholder='state'/>
                                                         </div>
                                                         <div className="form-group col-md-6">
-                                                            <label className="small mb-1" htmlFor="country" name='country'>Country</label>
-                                                            <select id="country" className="form-control">
+                                                            <label className="small mb-1" htmlFor="country">Country</label>
+                                                            <select id="country"  name='country' className="form-control">
                                                                 <option defaultValue={''}>Choose...</option>
-                                                                <option>...</option>
+                                                                <option value="India">India</option>
+                                                                <option value="USA">USA</option>
+                                                                <option value="Brazil">Brazil</option>
                                                             </select>
                                                         </div>
                                                         <div className="form-group col-md-6">
                                                             <label className="small mb-1" htmlFor="inputZip">Zip</label>
-                                                            <Field type="number" className={`form-control ${touched.zip && errors.zip ? "is-invalid" : ""}`} id="zip" placeholder='zip'/>
+                                                            <Field type="text" className={`form-control ${touched.zip && errors.zip ? "is-invalid" : ""}`}   name="zip" id="zip" placeholder='zip'/>
                                                             <ErrorMessage   
                                                                 component="div"
                                                                 name="zip"

@@ -24,19 +24,37 @@ class DashBoard extends Component {
     componentDidMount() {
         let data = {
             useremail: localStorage.getItem("userEmail"),
-            username: localStorage.getItem("username")
-
+            username: localStorage.getItem("username"),
+            search: localStorage.getItem("search")
         }
+        console.log( localStorage.getItem("search"))
+if(localStorage.getItem("search")===null || localStorage.getItem("search")===""){
+    axios.post('http://localhost:3000/api/getItemListForDashboard', data)
+    .then((response) => {
+        console.log(response.data)
+        //update the state with the response data
 
-        axios.post('http://localhost:3000/api/getItemListForDashboard', data)
-            .then((response) => {
-                console.log(response.data)
-                //update the state with the response data
+        this.setState({
+            items: this.state.items.concat(response.data)
+        });
+    });
+}
+else{
+    axios.post('http://localhost:3000/api/getItemListForDashboardbySearch', data)
+    .then((response) => {
+        console.log(response.data)
+        this.setState({
+            items: this.state.items.concat(response.data)
+        });
+    });
 
-                this.setState({
-                    items: this.state.items.concat(response.data)
-                });
-            });
+}
+       
+
+          
+    }
+    componentWillUnmount(){
+        localStorage.removeItem("search")
     }
     handleFavourite = (e) => {
         console.log("inside favourite");
@@ -93,6 +111,7 @@ class DashBoard extends Component {
     goToProduct = (e) => {
         console.log(e.target.id)
         localStorage.setItem('itemId',e.target.id)
+        localStorage.removeItem("search")
     }
     render() {
 

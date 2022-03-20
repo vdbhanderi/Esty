@@ -124,7 +124,7 @@ class Favourite extends Component {
         return (
             <div>
                 <NavBar />
-                <div className="card" style={{ width: "18rem", marginLeft: "80px" }}>
+                <div className="card" style={{ width: "18rem", marginLeft: "80px",marginTop: "80px" }}>
                     <div className="card-body">
                         <h5 className="card-title">Profile</h5>
                         <h6 className="card-subtitle mb-2 text-muted">Username:{localStorage.getItem("username")}</h6>

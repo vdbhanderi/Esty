@@ -1,4 +1,4 @@
-import React,{  }  from "react";
+import React,{ useState }  from "react";
 import { Link } from 'react-router-dom';
 import {
     // Formik, FormikHelpers, FormikProps, Form, Field, FieldProps,
@@ -28,7 +28,7 @@ const RegisterSchema = Yup.object().shape({
     regEmail: Yup.string().email('Invalid email').required('Required'),
 });
 export default function NavBar() {
-
+   const[search,setSearch]=useState("");
     // constructor(props) {
     //     super(props);
     //     this.state = {
@@ -53,7 +53,7 @@ export default function NavBar() {
         // cookie.remove('cookie', { path: '/' })
         console.log("Inside logout");
 
-        localStorage.removeItem('accountType')
+        localStorage.removeItem('userId')
         localStorage.removeItem('auth')
         localStorage.clear();
         cookie.remove("auth")
@@ -74,22 +74,15 @@ export default function NavBar() {
           //setuser({ ...user, redirect: "profile" });
           console.log("status is 200 redirect page");
           console.log("signup response api" + response.data);
+          localStorage.setItem("userId",response.data.userId)
+
           window.location.reload();
           cookie.save("auth", true, {
             path: "/",
             httpOnly: false,
             maxAge: 90000,
           });
-          cookie.save("id", response.data.id, {
-            path: "/",
-            httpOnly: false,
-            maxAge: 90000,
-          });
-          cookie.save("name", response.data.name, {
-            path: "/",
-            httpOnly: false,
-            maxAge: 90000,
-          });
+          
           cookie.save("email", response.data.email, {
             path: "/",
             httpOnly: false,
@@ -108,6 +101,10 @@ export default function NavBar() {
          alert("username or password is not correct");
       })
     
+    }
+    const HandleSearch = () => {
+        console.log("Inside submit login");
+         localStorage.setItem("search",search)
     }
    const submitRegister = (details) => {
         console.log("Inside submit register", details);
@@ -129,26 +126,8 @@ export default function NavBar() {
                 httpOnly: false,
                 maxAge: 90000,
               });
-              cookie.save("id", response.data.id, {
-                path: "/",
-                httpOnly: false,
-                maxAge: 90000,
-              });
-              cookie.save("name", response.data.name, {
-                path: "/",
-                httpOnly: false,
-                maxAge: 90000,
-              });
-              cookie.save("email", response.data.email, {
-                path: "/",
-                httpOnly: false,
-                maxAge: 90000,
-              });
-              cookie.save("defaultcurrency", response.data.currency, {
-                path: "/",
-                httpOnly: false,
-                maxAge: 90000,
-              });
+             localStorage.setItem("userId",response.data.userId)
+             
              
             }
           })
@@ -160,28 +139,9 @@ export default function NavBar() {
     }
    // render() {
         let navLogin = null;
-        if (localStorage.getItem('token')) {
+        if (localStorage.getItem('userId')) {
             console.log("Able to read token");
-            // if (localStorage.getItem('accountType') === "1") {
-            //     console.log("near nav login")
-            //     navLogin = (
-            //         <ul className="nav navbar-inverse ">
-            //             <li><Link to="/userhome">Home</Link></li>&nbsp;&nbsp;&nbsp;&nbsp;
-            //                  <li className="dropdown active">
-            //                 <a className="dropdown-toggle" href="/upcomingorders" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-expanded="false">
-            //                     Orders
-            //                         </a>
-            //                 <div className="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-            //                     <a className="dropdown-item" href="/" onClick={this.handleOrders}>Upcoming Orders</a>
-            //                     <a className="dropdown-item" href='/' onClick={this.handlePastOrders}>Past Orders</a>
-            //                 </div>
-            //             </li>&nbsp;&nbsp;&nbsp;&nbsp;
-            //                  <li><Link to="/cart">Cart</Link></li>&nbsp;&nbsp;&nbsp;&nbsp;
-            //                  <li><Link to="/account">{localStorage.getItem("userName")}</Link></li>&nbsp;&nbsp;&nbsp;&nbsp;
-            //                  <li><Link to="/" onClick={this.handleLogout}>Logout</Link></li>
-            //         </ul>
-            //     )
-            // }
+     
         }
         let authPanel = null
        //  let redirectVar = <Navigate to="/"/>
@@ -201,7 +161,7 @@ export default function NavBar() {
                             {/* <button className="btn btn-outline" type="submit"> <Link to='/favourite'><i className="bi bi-person-circle"></i></Link></button> */}
                             <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <li><a className="dropdown-item" href="/profile">My Profile</a></li>
-                                <li><a className="dropdown-item" href="/product">My Purchase</a></li>
+                                <li><a className="dropdown-item" href="/purchase">My Purchase</a></li>
                                 <li><a className="dropdown-item" href="/cart">Cart</a></li>
 
                                 {/* <li><Link to='/profile'>My Purchase</Link></li> */}
@@ -365,8 +325,8 @@ export default function NavBar() {
                         <h1 className="font-weight-bold" >&nbsp; Esty</h1>
                     </a>
                     <form className="d-inline-flex col-md-8 p-2">
-                        <input className="form-control me-2 rounded" type="search" placeholder="Search" aria-label="Search" />
-                        <button className="btn btn-outline-success" type="submit"> <i className="bi bi-search"></i></button>
+                        <input className="form-control me-2 rounded" type="search" placeholder="Search" aria-label="Search" onChange={e => setSearch(e.target.value)}/>
+                        <button className="btn btn-outline-success"   > <i className="bi bi-search" onClick={HandleSearch}></i></button>
                     </form>
                     {authPanel}
                   

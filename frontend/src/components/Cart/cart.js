@@ -25,7 +25,6 @@ class Cart extends Component {
             userId: 4, //localStorage.getItem("userId"),
             cartId: localStorage.getItem("cartId")
         }
-
         axios.post('http://localhost:3000/api/getCart', data)
             .then((response) => {
                 if (response.status === 200) {
@@ -54,14 +53,17 @@ class Cart extends Component {
             userId: 4, //localStorage.getItem("userId"),
             cartId: localStorage.getItem("cartId")
         }
+        localStorage.removeItem("cartId")
+
         axios.post('http://localhost:3000/api/checkOut', data)
             .then((response) => {
+                console.log(response)
+
                 if (response.status === 200) {
-                    console.log(response);
+
                     this.setState({
                         isAddedIntoCart: true
                     })
-                    localStorage.removeItem("cartId")
                 }
                 else {
                     alert("Please try Again")
