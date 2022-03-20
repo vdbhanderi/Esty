@@ -6,6 +6,7 @@ import axios from 'axios';
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import $ from 'jquery';
+import backendUrl from '../config';
 //import rootUrl from "../config";
 
 
@@ -62,7 +63,7 @@ export default class ShopHome extends Component {
         //var userId=this.props.id
         // var userId=1//localStorage.getItem("userId")
         console.log('inside item list mount')
-        await axios.post('http://localhost:3000/api/getItemListbyShopID', data)
+        await axios.post(`${backendUrl}/api/getItemListbyShopID`, data)
             .then((response) => {
                 //update the state with the response data
                 console.log('item List', response.data)
@@ -70,7 +71,7 @@ export default class ShopHome extends Component {
                     itemList: this.state.itemList.concat(response.data)
                 });
             });
-        await axios.post('http://localhost:3000/api/getShopDetails', data)
+        await axios.post(`${backendUrl}/api/getShopDetails`, data)
             .then((response) => {
                 //update the state with the response data
                 console.log('Shop Deatils', response.data[0].shopEmail)
@@ -89,7 +90,7 @@ export default class ShopHome extends Component {
                     document.getElementById('editShop').style.visibility = "visible";
                 }
             });
-        await axios.post('http://localhost:3000/api/getCategories', data)
+        await axios.post(`${backendUrl}/api/getCategories`, data)
             .then((response) => {
                 //update the state with the response data
                 //  console.log('category Deatils', response.data)
@@ -107,7 +108,7 @@ export default class ShopHome extends Component {
         const data = {
             shopName: details.shopName,
         }
-        await axios.post('http://localhost:3000/api/getShopName', data)
+        await axios.post(`${backendUrl}/api/getShopName`, data)
             .then(response => {
                 console.log("Status Code : ", response.status);
                 if (response.status === 200) {
@@ -131,7 +132,7 @@ export default class ShopHome extends Component {
         console.log("Inside Update Item", details);
         console.log("Image", details.itemImage);
 
-         await axios.post('http://localhost:3000/api/updateItem', details)
+         await axios.post(`${backendUrl}/api/updateItem`, details)
              .then(response => {
                  console.log("Status Code : ", response.status);
                  if (response.status === 200) {
@@ -154,7 +155,7 @@ export default class ShopHome extends Component {
     UpdateShop = () => {
         console.log("Inside Update shop",this.state.shopImage);
 
-          axios.post('http://localhost:3000/api/UpdateShop', {shopName:this.state.shopName,shopImage:this.state.shopImage})
+          axios.post(`${backendUrl}/api/UpdateShop`, {shopName:this.state.shopName,shopImage:this.state.shopImage})
              .then(response => {
                  console.log("Status Code : ", response.status);
                  if (response.status === 200) {
@@ -167,7 +168,7 @@ export default class ShopHome extends Component {
     AddItem = async (details) => {
         details['shopId'] = localStorage.getItem('shopId')
         console.log("Inside insert Item", details);
-        await axios.post('http://localhost:3000/api/AddItem', details)
+        await axios.post(`${backendUrl}/api/AddItem`, details)
             .then(response => {
                 console.log("Status Code : ", response.status);
                 if (response.status === 200) {
@@ -215,7 +216,7 @@ export default class ShopHome extends Component {
             return
         }
         console.log(e.target.id)
-        await axios.post('http://localhost:3000/api/getItemDetails', { itemId: e.target.id })
+        await axios.post(`${backendUrl}/api/getItemDetails`, { itemId: e.target.id })
             .then((response) => {
                 //update the state with the response data
                 console.log('item List', response.data[0])
@@ -249,7 +250,7 @@ export default class ShopHome extends Component {
             const data = new FormData();
             data.append('file', profilePhoto);
             console.log(data.get("file"))
-            await axios.post('http://localhost:3000/uploadImage', data)
+            await axios.post(`${backendUrl}/uploadImage`, data)
                 .then(response => {
                     if (response.status === 200) {
                         console.log("success")
@@ -257,7 +258,7 @@ export default class ShopHome extends Component {
                         var itemImage=response.data.itemImage.replace(/["]+/g, '')
                         console.log('Profile Photo Name: ', itemImage);
                         this.setState({
-                          itemImage: 'http://localhost:3000/download-file/' + itemImage,
+                          itemImage: `${backendUrl}/download-file/` + itemImage,
                             // itemImage: 
                         })
                         console.log("image", this.state.itemImage)
@@ -271,7 +272,7 @@ export default class ShopHome extends Component {
             const data = new FormData();
             data.append('file', profilePhoto1);
             console.log(data.get("file"))
-            await axios.post('http://localhost:3000/uploadImage', data)
+            await axios.post(`${backendUrl}/uploadImage`, data)
                 .then(response => {
                     if (response.status === 200) {
                         console.log("success")
@@ -279,7 +280,7 @@ export default class ShopHome extends Component {
                         var itemImage=response.data.itemImage.replace(/["]+/g, '')
                         console.log('Shop Photo Name: ', itemImage);
                         this.setState({
-                          shopImage: 'http://localhost:3000/download-file/' + itemImage,
+                          shopImage: `${backendUrl}/download-file/` + itemImage,
                             // itemImage: 
                         })
                         console.log("shopImage", this.state.itemImage)
