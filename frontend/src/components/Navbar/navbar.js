@@ -71,7 +71,7 @@ export default function NavBar() {
                     //setuser({ ...user, redirect: "profile" });
                     console.log("status is 200 redirect page");
                     console.log("signup response api" + response.data);
-                    localStorage.setItem("userId", response.data.userId)
+                    localStorage.setItem("userId", response.data.id)
 
                     window.location.reload();
                     cookie.save("auth", true, {
@@ -163,7 +163,7 @@ export default function NavBar() {
                         <button className="btn btn-outline" type="submit"> <Link to='/cart'><i className="bi bi-cart4"></i></Link></button>
                     </li>
                     <li className="d-inline">
-                        <button className="btn" type="submit"> <i className="bi bi-box-arrow-in-right" onClick={handleLogout}></i></button>
+                    <Link to="/"><button className="btn" type="submit"> <i className="bi bi-box-arrow-in-right" onClick={handleLogout}></i></button></Link>
                     </li>
                 </ul>
             </div>

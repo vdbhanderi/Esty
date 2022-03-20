@@ -105,7 +105,7 @@ class Favourite extends Component {
                     >
                         <div className="part-1" >
                             <Link to={`/product/${item.itemId}`}>
-                                <img alt='' src={`${item.itemImage}`} id={`${item.itemId}`} style={{ "background": `no-repeat center`, "backgroundSize": "cover" }} onClick={this.goToProduct}></img>
+                                <img alt='' src={`${item.itemImage}`} id={`${item.itemId}`} style={{ "background": `no-repeat center`, "backgroundSize": "cover","width":"290px",height:"290px" }} onClick={this.goToProduct}></img>
                             </Link>
                             {item.favouriteId != null ? <span className="new heart" id={item.itemId} onClick={this.handleFavourite}>&#9829;</span> :
                                 <span className="new heart1" id={item.itemId} onClick={this.handleFavourite}>&#9825;</span>}

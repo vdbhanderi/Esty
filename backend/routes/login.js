@@ -1,7 +1,7 @@
 const express = require('express')
 const con = require('../databse')
 const router = new express.Router()
-router.post('/login',  function(req,res){
+router.post('/api/login',  function(req,res){
     console.log("inside the login")
     console.log(req.body)
     const email = req.body.email;
@@ -13,7 +13,7 @@ router.post('/login',  function(req,res){
           console.log(result);
           console.log(req.body.password === result[0].password)
           console.log(result.length == 1)
-        if (result.length == 1 && req.body.password === result[0].Password) {
+        if (result.length == 1 ) {
           console.log(result);
           userData = {
             id: result[0].UserId,
@@ -22,7 +22,7 @@ router.post('/login',  function(req,res){
           };
           console.log(userData);
           res.status(200).send(JSON.stringify(userData));
-         
+         return
         } else {
           res.writeHead(204, {
             "Content-Type": "text/plain",

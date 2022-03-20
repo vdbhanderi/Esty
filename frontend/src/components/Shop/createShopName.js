@@ -31,40 +31,33 @@ export default class CreateShopName extends Component {
     }
 
     async componentDidMount() {
-        // let data = {
-        //     useremail: localStorage.getItem("userEmail"),
-        //     username: localStorage.getItem("username"),
-        //     userID: localStorage.getItem("userId")
-        // }
+         let data = {
+            userId: localStorage.getItem("userId"),
+         }
         console.log("Inside create shop name after component did mount");
-
-        // axios.post('http://localhost:3000/getShopName', data)
-        //     .then(response => {
-        //         console.log("Status Code : ", response.status);
-        //         if (response.status === 200) {
-        //             this.setState({
-        //                 email: response.data.email,
-        //                 username: data.username,
-        //                 phone: response.data.phone,
-        //                 address: response.data.address,
-
-
-
-        //                 //isLoade: true
-        //             })
-        //         }
-        //         else {
-        //             this.setState({
-        //                 //    isCreated: false
-        //             })
-        //             alert("Book Id exists")
-        //         }
-        //     });
+         var shopIdbyDB=null;
+       await  axios.post('http://localhost:3000/api/getShopDetailsbyUserId',data )
+             .then(response => {
+                 console.log("Status Code : ", response);
+                 console.log("Status Code : ", response.data.shopId);
+                 if (response.status === 200) {
+                    shopIdbyDB=response.data.shopId;
+                 }
+               
+             });
         let shopID = localStorage.getItem('shopId');
+        console.log(shopIdbyDB)
         if (shopID) {
             this.setState({
                 redirect: <Navigate to={`/shopHome/${shopID}`} />
             })
+        }
+        else if(shopIdbyDB!=null){
+            console.log("inn")
+            this.setState({
+                redirect: <Navigate to={`/shopHome/${shopIdbyDB}`} />
+            })
+            localStorage.setItem("shopId",shopIdbyDB)
         }
         console.log("state updated", this.state)
 

@@ -76,6 +76,7 @@ export default class ShopHome extends Component {
                 console.log('Shop Deatils', response.data[0].shopEmail)
                 this.setState({
                     shopEmail: response.data[0].shopEmail,
+                    shopImage: response.data[0].shopImage,
                     shopName: response.data[0].shopName
                 });
                 console.log("first", response.data[0].userId)
@@ -148,6 +149,19 @@ export default class ShopHome extends Component {
                  })
                    window.location.reload(); 
                  console.log("updated Code : ", this.state.isUpdated);
+             });
+    }
+    UpdateShop = () => {
+        console.log("Inside Update shop",this.state.shopImage);
+
+          axios.post('http://localhost:3000/api/UpdateShop', {shopName:this.state.shopName,shopImage:this.state.shopImage})
+             .then(response => {
+                 console.log("Status Code : ", response.status);
+                 if (response.status === 200) {
+                   
+                     console.log("updated Code : ", this.state.isUpdated);
+                 }
+                 
              });
     }
     AddItem = async (details) => {
@@ -228,7 +242,7 @@ export default class ShopHome extends Component {
         const name = target.name;
         console.log(name)
 
-        if (name === "itemImage") {
+        if (name === "itemImage" ) {
             var profilePhoto = target.files[0];
             console.log('2', profilePhoto);
 
@@ -247,6 +261,28 @@ export default class ShopHome extends Component {
                             // itemImage: 
                         })
                         console.log("image", this.state.itemImage)
+                    }
+                });
+        }
+        if (name==="shopImage") {
+            var profilePhoto1 = target.files[0];
+            console.log('2', profilePhoto);
+
+            const data = new FormData();
+            data.append('file', profilePhoto1);
+            console.log(data.get("file"))
+            await axios.post('http://localhost:3000/uploadImage', data)
+                .then(response => {
+                    if (response.status === 200) {
+                        console.log("success")
+                        console.log("response",response.data)
+                        var itemImage=response.data.itemImage.replace(/["]+/g, '')
+                        console.log('Shop Photo Name: ', itemImage);
+                        this.setState({
+                          shopImage: 'http://localhost:3000/download-file/' + itemImage,
+                            // itemImage: 
+                        })
+                        console.log("shopImage", this.state.itemImage)
                     }
                 });
         }
@@ -294,11 +330,12 @@ export default class ShopHome extends Component {
                                         <div className="card p-5">
                                             <div className='row'>
                                                 <div className="text-start col-4">
-                                                    <img className="img-account-profile rounded-circle mb-2 " src="http://bootdey.com/img/Content/avatar/avatar1.png" alt="" height={'120px'} width={'120px'} />
+                                                    <img className="img-account-profile rounded-circle mb-2 " src={this.state.shopImage} alt="" height={'120px'} width={'120px'} />
+                                                    {this.state.isOwner?  <input type='file' name='shopImage' onChange={this.uploadImage} /> :null}
                                                 </div>
                                                 <div className="col-lg-7 justify-content-between" >
                                                     <p className="h2 fw-bold" style={{ float: 'left' }}>{this.state.shopName}</p><br /><br />
-                                                    <button className="btn btn-primary" id="editShop" name='editShop' style={{ visibility: 'hidden', float: 'left' }} type="submit">Edit Shop</button>
+                                                    <button className="btn btn-primary" id="editShop" name='editShop' style={{ visibility: 'hidden', float: 'left' }} type="submit" onClick={this.UpdateShop}>Update Shop</button>
 
                                                     {/* <button className="btn btn-primary" type="button">Edit Shop</button> */}
                                                 </div>
@@ -449,7 +486,7 @@ export default class ShopHome extends Component {
                                                 </div>
                                                 <div className="mb-3">
                                                     <label className="small mb-1" htmlFor="quantity">Qunatity</label>
-                                                    <Field className={`form-control ${touched.quantity && errors.quantity ? "is-invalid" : ""}`} id="quantity" name="quantity" type="number" placeholder="Quantity" />
+                                                    <Field className={`form-control ${touched.quantity && errors.quantity ? "is-invalid" : ""}`} id="quantity" name="quantity" type="text" placeholder="Quantity" />
                                                     <ErrorMessage
                                                         component="div"
                                                         name="quantity"
@@ -458,7 +495,7 @@ export default class ShopHome extends Component {
                                                 </div>
                                                 <div className="mb-3">
                                                     <label className="small mb-1" htmlFor="price">Price</label>
-                                                    <Field className={`form-control ${touched.price && errors.price ? "is-invalid" : ""}`} id="price" name="price" type="number" placeholder="price" />
+                                                    <Field className={`form-control ${touched.price && errors.price ? "is-invalid" : ""}`} id="price" name="price" type="text" placeholder="price" />
                                                     <ErrorMessage
                                                         component="div"
                                                         name="price"

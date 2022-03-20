@@ -144,7 +144,7 @@ class DashBoard extends Component {
         return (
             <div>
                 <NavBar />
-                <section className="section-products">
+                <section className="section-products" style={{"marginBottom":"100px"}}>
                     <div className="container">
                         {/* <div className="row justify-content-center text-center">
 						<div className="col-md-8 col-lg-6">

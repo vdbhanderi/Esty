@@ -1,12 +1,10 @@
 import React, { Component } from "react";
-// import {Link} from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import axios from 'axios';
 import './profile.css';
 ///import rootUrl from "../config/settings";
-//import swal from "sweetalert"
-import user_image from "../../images/user_defaultimage.png"
+//import user_image from "../../images/user_defaultimage.png"
 import NavBar from '../Navbar/navbar'
 
 const phoneRegExp = /^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/
@@ -84,7 +82,7 @@ export default class UserProfile extends Component {
                     dob: response.data.dob, 
                     phone: response.data.phone, 
                     city: response.data.city, 
-                    username: response.data.userName, 
+                    username: response.data.username, 
                     userImage: response.data.userImage, 
                 })
             }
@@ -139,7 +137,7 @@ export default class UserProfile extends Component {
             address: details.address,
             zip: details.zip,
             gender: details.gender,
-            country: details.country,
+            country: "USA",//details.country,
             state: details.state,
             userImage: details.userImage,
             city: details.city
@@ -149,9 +147,12 @@ export default class UserProfile extends Component {
              console.log("Status Code : ", response.status);
              if (response.status === 200) {
                    alert("successfully Updated")
+                   this.setState({
+                       dop:'11/11/2011'
+                })
              }
              else {
-         
+              
              }
          });
     }
@@ -276,9 +277,8 @@ export default class UserProfile extends Component {
                                                         <div className="form-group col-md-6">
                                                             <label className="small mb-1" htmlFor="country">Country</label>
                                                             <select id="country"  name='country' className="form-control">
-                                                                <option defaultValue={''}>Choose...</option>
                                                                 <option key='India' value="India">India</option>
-                                                                <option key="USA" value="USA">USA</option>
+                                                                <option defaultValue="USA" value="USA">USA</option>
                                                                 <option key="Brazil" value="Brazil">Brazil</option>
                                                             </select>
                                                         </div>

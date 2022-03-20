@@ -130,10 +130,10 @@ class Cart extends Component {
                                         <p className="mb-4"><em>Shipping and additional costs are calculated based on values you have entered.</em></p>
                                         <ul className="list-unstyled mb-4">
                                             <li className="d-flex justify-content-between py-3 border-bottom"><strong className="text-muted">Order Subtotal </strong><strong>${this.state.totalprice}</strong></li>
-                                            <li className="d-flex justify-content-between py-3 border-bottom"><strong className="text-muted">Shipping and handling</strong><strong>$10</strong></li>
+                                            {/* <li className="d-flex justify-content-between py-3 border-bottom"><strong className="text-muted">Shipping and handling</strong><strong>$10</strong></li> */}
                                             <li className="d-flex justify-content-between py-3 border-bottom"><strong className="text-muted">Tax</strong><strong>$0</strong></li>
                                             <li className="d-flex justify-content-between py-3 border-bottom"><strong className="text-muted">Total</strong>
-                                                <h5 className="fw-bold">${this.state.totalprice + 10.00}</h5>
+                                                <h5 className="fw-bold">${parseFloat(this.state.totalprice).toFixed(2)}</h5>
                                             </li>
                                         </ul><a href="/purchase" className="btn btn-dark rounded-pill py-2 d-md-block text-light" onClick={this.CheckOut}>Procceed to checkout</a>
                                     </div>

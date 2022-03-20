@@ -91,7 +91,35 @@ router.post('/api/getShopDetails', function (req, res) {
         }
     });
 });
+router.post('/api/getShopDetailsbyUserId', function (req, res) {
+    console.log("inside the shop deatils")
+    console.log(req.body)
+    const userId = req.body.userId;
+    console.log(userId)
 
+    const sqlget = "Select * from Shop WHERE userId=?";
+    con.query(sqlget, [userId], (error, result) => {
+        if (!error) {
+            console.log("inside itemList query");
+            console.log(result);
+            console.log(result.length == 1)
+            if (result.length == 1) {
+                console.log(result);
+                res.status(200).send(JSON.stringify(result[0]));
+                return
+            }
+            res.writeHead(204, {
+                "Content-Type": "text/plain",
+            });
+            res.end("Shop name is taken");
+
+        } else {
+            console.log(error)
+            res.status(500).send('Something broke!')
+
+        }
+    });
+});
 router.post("/api/createShop", (req, res) => {
     console.log("inside create shop api", req.body);
     const shopName = req.body.shopName;
@@ -133,6 +161,44 @@ router.post("/api/createShop", (req, res) => {
             res.status(500).send('There is some issue please try again!')
         }
     });
+});
+router.post("/api/UpdateShop", (req, res) => {
+    console.log("inside update shop api", req.body);
+    const shopName = req.body.shopName;
+    const userId = req.body.userId;
+    const shopImage = req.body.shopImage;
+    const sqlInsert = "update Shop set shopImage=? where shopName=?";
+    const sqlget2 = "Select * from Shop where shopName=?";
+            console.log("no error create shop query");
+            console.log();
+            con.query(sqlInsert, [shopImage,shopName], (err, result) => {
+                if (!err) {
+                    console.log(result)
+                    console.log(result.length)
+                    if (result.length == 1) {
+                        userData = {
+                            shopId: result[0].shopId,
+                        };
+                        res.status(200).send(JSON.stringify(userData));
+                    } else {
+                        res.writeHead(204, {
+                            "Content-Type": "text/plain",
+                        });
+                        res.end("Duplicate Shop");
+                    }
+                } else {
+                    console.log(err);
+                    res.writeHead(204, {
+                        "Content-Type": "text/plain",
+                    });
+                    res.status(404);
+                    res.end("Database issues");
+                }
+            });
+
+
+       
+  
 });
 router.post('/api/getCategories', function (req, res) {
     console.log("inside the shop deatils")
