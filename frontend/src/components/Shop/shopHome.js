@@ -58,6 +58,7 @@ export default class ShopHome extends Component {
         let data = {
             shopId: localStorage.getItem('shopId')
         }
+       
         //var userId=this.props.id
         // var userId=1//localStorage.getItem("userId")
         console.log('inside item list mount')
@@ -238,9 +239,11 @@ export default class ShopHome extends Component {
                 .then(response => {
                     if (response.status === 200) {
                         console.log("success")
-                        console.log('Profile Photo Name: ', profilePhoto.name);
+                        console.log("response",response.data)
+                        var itemImage=response.data.itemImage.replace(/["]+/g, '')
+                        console.log('Profile Photo Name: ', itemImage);
                         this.setState({
-                            itemImage: 'http://localhost:3000/download-file/' + profilePhoto.name,
+                          itemImage: 'http://localhost:3000/download-file/' + itemImage,
                             // itemImage: 
                         })
                         console.log("image", this.state.itemImage)

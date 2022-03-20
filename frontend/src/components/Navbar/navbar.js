@@ -50,11 +50,8 @@ export default function NavBar() {
     //     setInputs((input) => ({ ...input, [name]: value }));
     //   };
     const handleLogout = () => {
-        // cookie.remove('cookie', { path: '/' })
+        cookie.remove('cookie', { path: '/' })
         console.log("Inside logout");
-
-        localStorage.removeItem('userId')
-        localStorage.removeItem('auth')
         localStorage.clear();
         cookie.remove("auth")
 

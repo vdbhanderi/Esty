@@ -48,13 +48,13 @@ export default class UserProfile extends Component {
             zip: "",
             dob:"",
             city: "",
-            profileImage: "",
+            userImage: "",
             profileImagePreview: undefined,
             isUpdated: false
            
         }
         this.submitProfile = this.submitProfile.bind(this)
-        this.handleChange = this.handleChange.bind(this);
+      //  this.handleChange = this.handleChange.bind(this);
     }
 
 
@@ -85,6 +85,7 @@ export default class UserProfile extends Component {
                     phone: response.data.phone, 
                     city: response.data.city, 
                     username: response.data.userName, 
+                    userImage: response.data.userImage, 
                 })
             }
             else {
@@ -97,38 +98,41 @@ export default class UserProfile extends Component {
 
     }
 
-    //handle change of profile image
-    handleChange = (e) => {
+   
+    uploadImage = async (e) => {
         const target = e.target;
         const name = target.name;
+        console.log(name)
 
-        if (name === "ProfileImage") {
-            console.log(target.files);
+        if (name === "userImage") {
             var profilePhoto = target.files[0];
-            var data = new FormData();
-            data.append('photos', profilePhoto);
-            axios.defaults.withCredentials = true;
-            axios.post("rootUrl" + '/upload-file', data)
+            console.log('2', profilePhoto);
+
+            const data = new FormData();
+            data.append('file', profilePhoto);
+            console.log(data.get("file"))
+            await axios.post('http://localhost:3000/uploadImage', data)
                 .then(response => {
                     if (response.status === 200) {
-                        console.log('Profile Photo Name: ', profilePhoto.name);
-                        if (profilePhoto.name) {
-                            this.setState({
-                                profileImage: profilePhoto.name,
-                                profileImagePreview: "http://localhost:3000/download-file/" + profilePhoto.name
-                            })
-                        }
-
+                        console.log("success")
+                        console.log("response",response.data)
+                        var userImage=response.data.itemImage.replace(/["]+/g, '')
+                        console.log('Profile Photo Name: ', userImage);
+                        this.setState({
+                            userImage: 'http://localhost:3000/download-file/' + userImage,
+                            // itemImage: 
+                        })
+                        console.log("image", this.state.userImage)
                     }
                 });
         }
     }
 
-
     submitProfile = async (details) => {
         console.log("Inside profile update", details);
         const data = {
             email: details.email,
+            firstName: details.fullname,
             userId: localStorage.getItem("userId"),
             username: details.username,
             phone: details.phone,
@@ -137,7 +141,8 @@ export default class UserProfile extends Component {
             gender: details.gender,
             country: details.country,
             state: details.state,
-            userImage: details.profileImage
+            userImage: details.userImage,
+            city: details.city
         }
          axios.post('http://localhost:3000/api/submitProfile', data)
          .then(response => {
@@ -177,7 +182,7 @@ export default class UserProfile extends Component {
                             zip: this.state.zip,
                             city: this.state.city,
                             dob:this.state.dob,
-                           // profileImage: "",
+                            userImage: this.state.userImage,
                         }
                         }
                       
@@ -195,9 +200,10 @@ export default class UserProfile extends Component {
                                         <div className="card mb-4 mb-xl-0">
                                             <div className="card-header">Profile Picture</div>
                                             <div className="card-body text-center">
-                                                <img className="img-account-profile rounded-circle mb-2" src="http://bootdey.com/img/Content/avatar/avatar1.png" alt="" />
+                                                <img className="img-account-profile rounded-circle mb-2" src={this.state.userImage} alt="" />
                                                 <div className="small font-italic text-muted mb-4">JPG or PNG no larger than 5 MB</div>
-                                                <button className="btn btn-primary" type="button">Upload new image</button>
+                                                <input type='file' name='userImage' onChange={this.uploadImage} />
+                                                {/* <button className="btn btn-primary" type="button" onClick={this.uploadImage}>Upload new image</button> */}
                                             </div>
                                         </div>
                                     </div>
@@ -271,9 +277,9 @@ export default class UserProfile extends Component {
                                                             <label className="small mb-1" htmlFor="country">Country</label>
                                                             <select id="country"  name='country' className="form-control">
                                                                 <option defaultValue={''}>Choose...</option>
-                                                                <option value="India">India</option>
-                                                                <option value="USA">USA</option>
-                                                                <option value="Brazil">Brazil</option>
+                                                                <option key='India' value="India">India</option>
+                                                                <option key="USA" value="USA">USA</option>
+                                                                <option key="Brazil" value="Brazil">Brazil</option>
                                                             </select>
                                                         </div>
                                                         <div className="form-group col-md-6">

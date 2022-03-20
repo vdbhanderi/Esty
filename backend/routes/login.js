@@ -61,6 +61,7 @@ router.post('/api/getProfile',  function(req,res){
           city: result[0].city,
           address: result[0].userAddress,
           username: result[0].userName,
+          userImage: result[0].userImage,
       }
         res.status(200).send(JSON.stringify(data));
         return
@@ -80,6 +81,7 @@ router.post('/api/submitProfile', function (req, res) {
   console.log("inside the shop deatils")
   console.log(req.body)
   const phone = req.body.phone;
+  const firstName = req.body.firstName;
   const state = req.body.state;
   const country = req.body.country;
   const gender = req.body.gender;
@@ -89,10 +91,11 @@ router.post('/api/submitProfile', function (req, res) {
   const address = req.body.address;
   const userId = req.body.userId;
   const city = req.body.city;
-  //const userImage = req.body.userImage;
+  const userImage = req.body.userImage;
+  const userName = req.body.username;
 
-  const sqlget = "update Users set UserPhone=?,userZip=?,userAddress=?,gender=?,dob=?,state=?,UserEmail=?,userCountry=?,city=? WHERE userId=?";
-  con.query(sqlget, [phone,zip, address,gender,dob,state,email,country,city,userId], (error, result) => {
+  const sqlget = "update Users set firstName=?,userImage=?,userName=?,UserPhone=?,userZip=?,userAddress=?,gender=?,dob=?,state=?,UserEmail=?,userCountry=?,city=? WHERE userId=?";
+  con.query(sqlget, [firstName,userImage,userName,phone,zip, address,gender,dob,state,email,country,city,userId], (error, result) => {
       if (!error) {
           console.log("inside itemList query");
           console.log(result);
