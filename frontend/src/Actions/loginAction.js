@@ -1,11 +1,12 @@
 import axios from 'axios';
+import backendUrl from '../components/config';
 //import { USER_LOGIN, USER_LOGOUT } from '../constant-types';
 //import apiHost from '../../apiHost';
 
 export const userLogin = (loginInfo) => (dispatch) => {
   console.log("login dispatch")
   axios.defaults.withCredentials = true;
-  axios.post(`http://localhost:3000/login`, loginInfo)
+  axios.post(`${backendUrl}/api/login`, loginInfo)
     .then((response) => dispatch({
       type: 'USER_LOGIN',
       payload: response.data,

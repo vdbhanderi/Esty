@@ -7,6 +7,7 @@ import Footer from "../Footer/footer";
 import NavBar from "../Navbar/navbar";
 import '../Favourite/favourite.css'
 import { Link } from "react-router-dom";
+import backendUrl from "../config";
 
 
 class Favourite extends Component {
@@ -33,7 +34,7 @@ class Favourite extends Component {
 
         }
 
-        axios.post('http://localhost:3000/api/getFavouriteItemsbyUserID', data)
+        axios.post(`${backendUrl}/api/getFavouriteItemsbyUserID`, data)
             .then((response) => {
                 //update the state with the response data
                 console.log(response.data)
@@ -53,7 +54,7 @@ class Favourite extends Component {
         var favId = this.state.items.filter(x => x.itemId === parseInt(itemId))[0].favouriteId
         console.log("fav",favId)
          if (favId == null) {
-             axios.post('http://localhost:3000/api/addFavourite', data)
+             axios.post(`${backendUrl}/api/addFavourite`, data)
                  .then((response) => {
                      console.log(response.data)
                       this.setState({
@@ -65,7 +66,7 @@ class Favourite extends Component {
                  });
          }
          else {
-             axios.post('http://localhost:3000/api/removeFavourite', data)
+             axios.post(`${backendUrl}/api/removeFavourite`, data)
                  .then((response) => {
                      console.log(response.data) 
              });
@@ -82,7 +83,7 @@ class Favourite extends Component {
 
         }
 
-        axios.post('http://localhost:3000/api/getFavouriteItemsbyUserID', data)
+        axios.post(`${backendUrl}/api/getFavouriteItemsbyUserID`, data)
             .then((response) => {
                 //update the state with the response data
                 console.log(response.data)

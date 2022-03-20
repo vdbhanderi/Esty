@@ -3,6 +3,7 @@ import NavBar from '../Navbar/navbar';
 import './cart.css';
 import axios from 'axios';
 import { Navigate } from 'react-router';
+import backendUrl from '../config';
 class Cart extends Component {
     constructor(props) {
         super(props)
@@ -25,7 +26,7 @@ class Cart extends Component {
             userId: localStorage.getItem("userId"),
             cartId: localStorage.getItem("cartId")
         }
-        axios.post('http://localhost:3000/api/getCart', data)
+        axios.post(`${backendUrl}/api/getCart`, data)
             .then((response) => {
                 if (response.status === 200) {
                     console.log(response);
@@ -55,7 +56,7 @@ class Cart extends Component {
         }
         localStorage.removeItem("cartId")
 
-        axios.post('http://localhost:3000/api/checkOut', data)
+        axios.post(`${backendUrl}/api/checkOut`, data)
             .then((response) => {
                 console.log(response)
 

@@ -11,6 +11,7 @@ import './product.css';
 import NavBar from '../Navbar/navbar'
 import $ from 'jquery'
 import { Navigate } from "react-router";
+import backendUrl from "../config";
 
 export default class Product extends Component {
     constructor(props) {
@@ -34,7 +35,7 @@ export default class Product extends Component {
         }
         console.log("Inside get after component did mount", data.itemid);
 
-        await axios.post('http://localhost:3000/api/getItem', data)
+        await axios.post(`${backendUrl}/api/getItem`, data)
             .then(response => {
                 console.log("Status Code : ", response.status);
                 console.log("Status Code : ", response.data);
@@ -75,7 +76,7 @@ export default class Product extends Component {
             userId: userId,
             cartId: cartId,
         }
-        await axios.post('http://localhost:3000/api/addToCart', data)
+        await axios.post(`${backendUrl}/api/addToCart`, data)
             .then(response => {
                 console.log("Status Code : ", response.status);
                 if (response.status === 200) {

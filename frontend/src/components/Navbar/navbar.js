@@ -9,6 +9,7 @@ import cookie from 'react-cookies';
 import './navbar.css'
 import * as Yup from "yup";
 import axios from "axios";
+import backendUrl from "../config";
 const LoginSchema = Yup.object().shape({
     password: Yup.string()
         .min(2, 'Too Short!')
@@ -61,7 +62,7 @@ export default function NavBar() {
     }
     const submitLogin = (details) => {
         console.log("Inside submit login", details);
-        axios.post("http://localhost:3000/api/login", {
+        axios.post(`${backendUrl}/api/login`, {
             email: details.loginEmail,
             password: details.password,
         })
@@ -102,7 +103,7 @@ export default function NavBar() {
     const submitRegister = (details) => {
         console.log("Inside submit register", details);
 
-        axios.post("http://localhost:3000/api/register", {
+        axios.post(`${backendUrl}/api/register`, {
             firstname: details.firstname,
             email: details.regEmail,
             password: details.regPassword,

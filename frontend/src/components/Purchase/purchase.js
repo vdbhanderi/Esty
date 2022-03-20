@@ -4,6 +4,7 @@ import Footer from '../Footer/footer';
 import '../Cart/cart.css';
 import axios from 'axios';
 import { Navigate } from 'react-router';
+import backendUrl from '../config';
 
 export default class Purchase extends Component {
     constructor(props) {
@@ -29,7 +30,7 @@ export default class Purchase extends Component {
             })
             return
         }
-     axios.post('http://localhost:3000/api/getOrderedItems', data)
+     axios.post(`${backendUrl}/api/getOrderedItems`, data)
             .then((response) => {
                 //update the state with the response data
                 console.log(response.data)

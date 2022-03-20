@@ -8,6 +8,7 @@ import './shop.css';
 //import swal from "sweetalert"
 import NavBar from '../Navbar/navbar'
 import { Navigate } from "react-router";
+import backendUrl from "../config";
 
 const CreateShopNameSchema = Yup.object().shape({
     shopName: Yup.string()
@@ -36,7 +37,7 @@ export default class CreateShopName extends Component {
          }
         console.log("Inside create shop name after component did mount");
          var shopIdbyDB=null;
-       await  axios.post('http://localhost:3000/api/getShopDetailsbyUserId',data )
+       await  axios.post(`${backendUrl}/api/getShopDetailsbyUserId`,data )
              .then(response => {
                  console.log("Status Code : ", response);
                  console.log("Status Code : ", response.data.shopId);
@@ -68,7 +69,7 @@ export default class CreateShopName extends Component {
         const data = {
             shopName: details.shopName,
         }
-        await axios.post('http://localhost:3000/api/getShopName', data)
+        await axios.post(`${backendUrl}/api/getShopName`, data)
             .then(response => {
                 console.log("Status Code : ", response.status);
                 if (response.status === 200) {
@@ -100,7 +101,7 @@ export default class CreateShopName extends Component {
             shopName: this.state.shopName,
             userId: localStorage.getItem("userId")
         }
-        await axios.post('http://localhost:3000/api/createShop', data)
+        await axios.post(`${backendUrl}/api/createShop`, data)
             .then(response => {
                 console.log("Status Code : ", response.status);
                 const shopID = response.data.shopId;

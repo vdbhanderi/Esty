@@ -6,6 +6,7 @@ import './profile.css';
 ///import rootUrl from "../config/settings";
 //import user_image from "../../images/user_defaultimage.png"
 import NavBar from '../Navbar/navbar'
+import backendUrl from "../config";
 
 const phoneRegExp = /^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$/
 const zipRegEx = /^[0-9]{5}(?:-[0-9]{4})?$/
@@ -66,7 +67,7 @@ export default class UserProfile extends Component {
         console.log(localStorage.getItem('userId'))
         console.log("Inside get profile after component did mount");
 
-        await axios.post('http://localhost:3000/api/getProfile', data)
+        await axios.post(`${backendUrl}/api/getProfile`, data)
         .then(response => {
             console.log("Status Code : ", response.status);
             console.log("Status Code : ", response.data);
@@ -109,7 +110,7 @@ export default class UserProfile extends Component {
             const data = new FormData();
             data.append('file', profilePhoto);
             console.log(data.get("file"))
-            await axios.post('http://localhost:3000/uploadImage', data)
+            await axios.post(`${backendUrl}/uploadImage`, data)
                 .then(response => {
                     if (response.status === 200) {
                         console.log("success")
@@ -117,7 +118,7 @@ export default class UserProfile extends Component {
                         var userImage=response.data.itemImage.replace(/["]+/g, '')
                         console.log('Profile Photo Name: ', userImage);
                         this.setState({
-                            userImage: 'http://localhost:3000/download-file/' + userImage,
+                            userImage: `${backendUrl}/download-file/` + userImage,
                             // itemImage: 
                         })
                         console.log("image", this.state.userImage)
@@ -142,7 +143,7 @@ export default class UserProfile extends Component {
             userImage: details.userImage,
             city: details.city
         }
-         axios.post('http://localhost:3000/api/submitProfile', data)
+         axios.post(`${backendUrl}/api/submitProfile`, data)
          .then(response => {
              console.log("Status Code : ", response.status);
              if (response.status === 200) {

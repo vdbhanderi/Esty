@@ -7,6 +7,7 @@ import Footer from "../Footer/footer";
 import NavBar from "../Navbar/navbar";
 import './dashboard.css'
 import { Link } from "react-router-dom";
+import  backendUrl  from "../config";
 
 class DashBoard extends Component {
     constructor(props) {
@@ -29,7 +30,7 @@ class DashBoard extends Component {
         }
         console.log(localStorage.getItem("search"))
         if (localStorage.getItem("search") === null || localStorage.getItem("search") === "") {
-            axios.post('http://localhost:3000/api/getItemListForDashboard', data)
+            axios.post(`${backendUrl}/api/getItemListForDashboard`, data)
                 .then((response) => {
                     console.log(response.data)
                     //update the state with the response data
@@ -40,7 +41,7 @@ class DashBoard extends Component {
                 });
         }
         else {
-            axios.post('http://localhost:3000/api/getItemListForDashboardbySearch', data)
+            axios.post(`${backendUrl}/api/getItemListForDashboardbySearch`, data)
                 .then((response) => {
                     console.log(response.data)
                     this.setState({
@@ -67,7 +68,7 @@ class DashBoard extends Component {
         var favId = this.state.items.filter(x => x.itemId === parseInt(itemId))[0].favouriteId
         console.log("fav", favId)
         if (favId == null) {
-            axios.post('http://localhost:3000/api/addFavourite', data)
+            axios.post(`${backendUrl}/api/addFavourite`, data)
                 .then((response) => {
                     console.log(response.data)
                     this.setState({
@@ -79,7 +80,7 @@ class DashBoard extends Component {
                 });
         }
         else {
-            axios.post('http://localhost:3000/api/removeFavourite', data)
+            axios.post(`${backendUrl}/api/removeFavourite`, data)
                 .then((response) => {
                     console.log(response.data)
                 });
@@ -98,7 +99,7 @@ class DashBoard extends Component {
         console.log("click function");
         console.log(e.target.id);
         localStorage.setItem('itemId', e.target.id)
-        axios.post('http://localhost:3000/api/addFavourite', data)
+        axios.post(`${backendUrl}/api/addFavourite`, data)
             .then((response) => {
                 console.log(response.data)
                 //update the state with the response data
