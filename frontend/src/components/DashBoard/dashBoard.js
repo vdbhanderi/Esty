@@ -27,66 +27,66 @@ class DashBoard extends Component {
             username: localStorage.getItem("username"),
             search: localStorage.getItem("search")
         }
-        console.log( localStorage.getItem("search"))
-if(localStorage.getItem("search")===null || localStorage.getItem("search")===""){
-    axios.post('http://localhost:3000/api/getItemListForDashboard', data)
-    .then((response) => {
-        console.log(response.data)
-        //update the state with the response data
+        console.log(localStorage.getItem("search"))
+        if (localStorage.getItem("search") === null || localStorage.getItem("search") === "") {
+            axios.post('http://localhost:3000/api/getItemListForDashboard', data)
+                .then((response) => {
+                    console.log(response.data)
+                    //update the state with the response data
 
-        this.setState({
-            items: this.state.items.concat(response.data)
-        });
-    });
-}
-else{
-    axios.post('http://localhost:3000/api/getItemListForDashboardbySearch', data)
-    .then((response) => {
-        console.log(response.data)
-        this.setState({
-            items: this.state.items.concat(response.data)
-        });
-    });
+                    this.setState({
+                        items: this.state.items.concat(response.data)
+                    });
+                });
+        }
+        else {
+            axios.post('http://localhost:3000/api/getItemListForDashboardbySearch', data)
+                .then((response) => {
+                    console.log(response.data)
+                    this.setState({
+                        items: this.state.items.concat(response.data)
+                    });
+                });
 
-}
-       
+        }
 
-          
+
+
     }
-    componentWillUnmount(){
+    componentWillUnmount() {
         localStorage.removeItem("search")
     }
     handleFavourite = (e) => {
         console.log("inside favourite");
         var itemId = e.target.id
-        console.log("itemId",itemId)
+        console.log("itemId", itemId)
         let data = {
             itemId: itemId,
-            userId: 4//localStorage.getItem("userId")
+            userId: localStorage.getItem("userId")
         }
         var favId = this.state.items.filter(x => x.itemId === parseInt(itemId))[0].favouriteId
-        console.log("fav",favId)
-         if (favId == null) {
-             axios.post('http://localhost:3000/api/addFavourite', data)
-                 .then((response) => {
-                     console.log(response.data)
-                      this.setState({
-                          items: this.state.items.concat(response.data)
-                      });
-                      this.setState({
-                          items: this.state.items.concat(response.data)
-                      });
-                 });
-         }
-         else {
-             axios.post('http://localhost:3000/api/removeFavourite', data)
-                 .then((response) => {
-                     console.log(response.data) 
-             });
-         }
-         window.location.reload()
+        console.log("fav", favId)
+        if (favId == null) {
+            axios.post('http://localhost:3000/api/addFavourite', data)
+                .then((response) => {
+                    console.log(response.data)
+                    this.setState({
+                        items: this.state.items.concat(response.data)
+                    });
+                    this.setState({
+                        items: this.state.items.concat(response.data)
+                    });
+                });
+        }
+        else {
+            axios.post('http://localhost:3000/api/removeFavourite', data)
+                .then((response) => {
+                    console.log(response.data)
+                });
+        }
+        window.location.reload()
 
-       //   $(".heart").html("&#9825;");
+        //   $(".heart").html("&#9825;");
     }
     changeColor = (e) => {
 
@@ -110,7 +110,7 @@ else{
     }
     goToProduct = (e) => {
         console.log(e.target.id)
-        localStorage.setItem('itemId',e.target.id)
+        localStorage.setItem('itemId', e.target.id)
         localStorage.removeItem("search")
     }
     render() {
@@ -123,16 +123,16 @@ else{
                         <div className="part-1" >
                             <Link to={`/product/${item.itemId}`}>
                                 {/* <i className="bi bi-heart" id='heart' onClick={this.handleFavourite}></i> */}
-                                <img alt='' src={`${item.itemImage}`} id={`${item.itemId}`} style={{ "background": `no-repeat center`, "backgroundSize": "cover" }} onClick={this.changeColor}></img>
+                                <img alt='' src={`${item.itemImage}`} id={`${item.itemId}`} style={{ "background": `no-repeat center`, "backgroundSize": "cover", "width":"290px",height:"290px"}} onClick={this.changeColor}></img>
                             </Link>
                             {/* { <span className="new"><i className="" id='heart' onClick={this.handleFavourite}>&#9829;</i></span>	 } */}
-                            {item.favouriteId != null ? <span className="new heart" id={item.itemId} onClick={this.handleFavourite}>&#9829;</span> :
+                            {item.favouriteId != null && item.userId=== parseInt(localStorage.getItem("userId"))? <span className="new heart" id={item.itemId} onClick={this.handleFavourite}>&#9829;</span> :
                                 <span className="new heart1" id={item.itemId} onClick={this.handleFavourite}>&#9825;</span>}
                             {/* <i className="bi bi-heart" id='heart' onClick={this.handleFavourite}></i> */}
 
                         </div>
                         <div className="part-2" >
-                            <h3 className="product-title text-start"><strong>Item Name: </strong>:{item.itemName}</h3>
+                            <h3 className="product-title text-start"><strong>Item Name: </strong>{item.itemName}</h3>
                             <h4 className="product-price text-start" ><strong>Price : </strong> {item.currency ? item.currency.split('-')[0] : null}{item.price}</h4>
                         </div>
                     </div>

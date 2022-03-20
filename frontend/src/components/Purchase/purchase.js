@@ -3,13 +3,15 @@ import NavBar from '../Navbar/navbar';
 import Footer from '../Footer/footer';
 import '../Cart/cart.css';
 import axios from 'axios';
+import { Navigate } from 'react-router';
 
 export default class Purchase extends Component {
     constructor(props) {
         super(props)
         this.state = {
             orderedItems: [],
-            isLoaded: false
+            isLoaded: false,
+            redirect: null,
         }
 
     }
@@ -18,9 +20,15 @@ export default class Purchase extends Component {
         let data = {
             username: localStorage.getItem("username"),
             cartId: localStorage.getItem("cartId"),
-            userId: 4//localStorage.getItem("userId")
+            userId: localStorage.getItem("userId")
         }
-
+        let userId = localStorage.getItem('userId');
+        if (!userId) {
+            this.setState({
+                redirect: <Navigate to='/' />
+            })
+            return
+        }
      axios.post('http://localhost:3000/api/getOrderedItems', data)
             .then((response) => {
                 //update the state with the response data
@@ -53,6 +61,7 @@ export default class Purchase extends Component {
         })
         return (
             <div className="">
+                 {this.state.redirect}
                 <NavBar />
                 <div className="cart">
 

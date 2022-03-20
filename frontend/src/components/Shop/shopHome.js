@@ -46,7 +46,7 @@ export default class ShopHome extends Component {
             itemImage: '',
             categoriesList: [],
             newCat: '',
-            userId: 6 //localStorage.getItem('userId')
+            userId: localStorage.getItem('userId')
         }
         this.profileUpdate = this.profileUpdate.bind(this);
         this.changeOption = this.changeOption.bind(this);
@@ -78,22 +78,27 @@ export default class ShopHome extends Component {
                     shopName: response.data[0].shopName
                 });
                 console.log("first", response.data[0].userId)
-                if (response.data[0].userId === this.state.userId) {
+
+                if (response.data[0].userId === parseInt(this.state.userId)) {
                     this.setState({
                         isOwner: true
                     })
+                    console.log("inside");
                     document.getElementById('editShop').style.visibility = "visible";
                 }
             });
         await axios.post('http://localhost:3000/api/getCategories', data)
             .then((response) => {
                 //update the state with the response data
-              //  console.log('category Deatils', response.data)
+                //  console.log('category Deatils', response.data)
                 this.setState({
                     categoriesList: response.data
                 });
-               
+
             });
+    }
+    componentWillUnmount(){
+        localStorage.removeItem("shopId")
     }
     profileUpdate = async (details) => {
         console.log("Inside check Avaliability submit", details);
@@ -124,27 +129,28 @@ export default class ShopHome extends Component {
         console.log("Inside Update Item", details);
         console.log("Image", details.itemImage);
 
-        // await axios.post('http://localhost:3000/api/updateItem', details)
-        //     .then(response => {
-        //         console.log("Status Code : ", response.status);
-        //         if (response.status === 200) {
-        //             this.setState({
-        //                 isAvailiable: true,
-        //             })
-        //         }
-        //         else {
-        //             this.setState({
-        //                 isAvailiable: false
-        //             })
-        //         }
-        //         this.setState({
-        //             isUpdated: true
-        //         })
-        //         console.log("updated Code : ", this.state.isUpdated);
-        //     });
+         await axios.post('http://localhost:3000/api/updateItem', details)
+             .then(response => {
+                 console.log("Status Code : ", response.status);
+                 if (response.status === 200) {
+                     this.setState({
+                         isAvailiable: true,
+                     })
+                 }
+                 else {
+                     this.setState({
+                         isAvailiable: false
+                     })
+                 }
+                 this.setState({
+                     isUpdated: true
+                 })
+                   window.location.reload(); 
+                 console.log("updated Code : ", this.state.isUpdated);
+             });
     }
     AddItem = async (details) => {
-        details['shopId']=localStorage.getItem('shopId')
+        details['shopId'] = localStorage.getItem('shopId')
         console.log("Inside insert Item", details);
         await axios.post('http://localhost:3000/api/AddItem', details)
             .then(response => {
@@ -164,23 +170,22 @@ export default class ShopHome extends Component {
                 })
                 console.log("updated Code : ", this.state.isUpdated);
             });
-            window.location.reload()
+        window.location.reload()
 
-            $('#editModal').hide();
-            $('#editModal').dispose();
+        $('#editModal').hide();
+        $('#editModal').dispose();
     }
     changeOption = (e) => {
         console.log(e.target.value)
         if (e.target.value === '6') {
             document.getElementById('newCategory').style.display = "";
         }
-        else{
+        else {
             document.getElementById('newCategory').style.display = "none";
         }
-        this.setState({category: e.target.value});
-      
-
+        this.setState({ category: e.target.value });
     }
+
     changeAddupdateValue = async (e) => {
         if (e.target.name === 'Add') {
             this.setState({
@@ -190,12 +195,12 @@ export default class ShopHome extends Component {
                 category: '',
                 itemName: '',
                 quantity: '',
-                itemImage:''
+                itemImage: ''
             })
             return
         }
         console.log(e.target.id)
-        await axios.post('http://localhost:3000/api/getItemDetails', {itemId:e.target.id})
+        await axios.post('http://localhost:3000/api/getItemDetails', { itemId: e.target.id })
             .then((response) => {
                 //update the state with the response data
                 console.log('item List', response.data[0])
@@ -210,10 +215,13 @@ export default class ShopHome extends Component {
                 });
             });
         this.setState({
-             isAdd: false
+            itemImage: this.state.itemImage,
+            isAdd: false
         })
+        console.log("image", this.state.itemImage)
+
     }
-    
+
     uploadImage = async (e) => {
         const target = e.target;
         const name = target.name;
@@ -221,20 +229,21 @@ export default class ShopHome extends Component {
 
         if (name === "itemImage") {
             var profilePhoto = target.files[0];
-            console.log('2',profilePhoto);
+            console.log('2', profilePhoto);
 
             const data = new FormData();
             data.append('file', profilePhoto);
             console.log(data.get("file"))
-             await axios.post('http://localhost:3000/uploadImage', data)
+            await axios.post('http://localhost:3000/uploadImage', data)
                 .then(response => {
                     if (response.status === 200) {
                         console.log("success")
                         console.log('Profile Photo Name: ', profilePhoto.name);
                         this.setState({
                             itemImage: 'http://localhost:3000/download-file/' + profilePhoto.name,
-                           // itemImage: 
+                            // itemImage: 
                         })
+                        console.log("image", this.state.itemImage)
                     }
                 });
         }
@@ -248,9 +257,9 @@ export default class ShopHome extends Component {
                     <td className="border-0 align-middle"><strong>{item.price}</strong></td>
                     <td className="border-0 align-middle"><strong>{item.totalSale}</strong></td>
                     {
-                       (this.state.isOwner && item.itemName) ?
-                       <td className="border-0 align-middle " style={{display:'none'}}>{item.itemId}</td>
-                       : null
+                        (this.state.isOwner && item.itemName) ?
+                            <td className="border-0 align-middle " style={{ display: 'none' }}>{item.itemId}</td>
+                            : null
                     }
                     {(this.state.isOwner && item.itemName) ?
                         <td className="border-0 align-middle"><button className="btn btn-primary" id={item.itemId} name='edit' data-bs-toggle="modal" data-bs-target="#editModal" type="submit" onClick={this.changeAddupdateValue}>Edit Item</button>
@@ -301,8 +310,9 @@ export default class ShopHome extends Component {
 
                                                 <p className="h4 fw-bold">Contact</p>
                                                 <p className=" "> Owner Name : {this.state.shopName}</p>
-                                                <p className=""> Email : {this.state.shopEmail}</p>
-                                                <p className=""> Phone : {this.state.Phone}</p>
+                                                {/* <p className=""> Email : {this.state.shopEmail}</p> */}
+                                                <p className=""> Phone : 1234567890</p>
+                                                {/* {this.state.Phone}</p> */}
 
                                             </div>
                                         </div>
@@ -317,7 +327,7 @@ export default class ShopHome extends Component {
                                     <p className="h2 fw-bold  p-3">Items list</p>
                                     <div className='text-end p-1'>
 
-                                        <button className="btn btn-dark" id="" name='Add' data-bs-toggle="modal" onClick={this.changeAddupdateValue} data-bs-target="#editModal" type="submit">Add Item</button>
+                                       {this.state.isOwner?<button className="btn btn-dark" id="" name='Add' data-bs-toggle="modal" onClick={this.changeAddupdateValue} data-bs-target="#editModal" type="submit">Add Item</button>:null}
                                     </div>
                                     <div className="table-responsive">
                                         <table className="table">
@@ -357,7 +367,7 @@ export default class ShopHome extends Component {
                             <div className="modal-header">
                                 <h5 className="modal-title" id="exampleModalLabel">Edit Item</h5>
                                 <button type="button" className="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>  
+                            </div>
                             <Formik
                                 enableReinitialize
                                 initialValues={this.state
@@ -365,7 +375,7 @@ export default class ShopHome extends Component {
 
                                 validationSchema={UpdateShopSchema}
                                 onSubmit={(values, actions) => {
-                                    this.state.isAdd?this.AddItem(values):this.UpdateItem(values)
+                                    this.state.isAdd ? this.AddItem(values) : this.UpdateItem(values)
                                     //  console.log({ values, actions });
                                     // alert(JSON.stringify(values, null, 2));
                                 }}
@@ -386,7 +396,7 @@ export default class ShopHome extends Component {
 
                                                 <div className="mb-3">
                                                     <label className="small mb-1" htmlFor="itemName">Item Name</label>
-                                                    <Field className={`form-control ${touched.itemName && errors.itemName ? "is-invalid" : ""}`} name="itemName" id="itemName" type="text" placeholder="Enter your username" />
+                                                    <Field className={`form-control ${touched.itemName && errors.itemName ? "is-invalid" : ""}`} name="itemName" id="itemName" type="text" placeholder="Enter your item Name" />
                                                     <ErrorMessage
                                                         component="div"
                                                         name="itemName"
@@ -455,7 +465,7 @@ export default class ShopHome extends Component {
                                             </div>
                                         </div>
                                         <div className="modal-footer">
-                                            <button type="submit" className="btn btn-primary">Update</button>
+                                            {!this.state.isAdd ? <button type="submit" className="btn btn-primary">Update</button> : <button type="submit" className="btn btn-primary">Add</button>}
                                         </div>
 
                                     </Form>

@@ -20,6 +20,7 @@ export default class Product extends Component {
             itemid: '',
             itemImage: "",
             shopName:'',
+            shopId:'',
             salecount: '',
             itemName: '',
             price: "",
@@ -43,6 +44,7 @@ export default class Product extends Component {
                         itemid: data.itemid,
                         itemName: response.data.itemName,
                         shopName: response.data.shopName,
+                        shopId: response.data.shopId,
                         itemImage: response.data.itemImage,
                         salecount: response.data.totalSale,
                         price: response.data.price,
@@ -60,7 +62,7 @@ export default class Product extends Component {
         const quantity = $('#quantity').val();
         const cartId = localStorage.getItem("cartId");
         console.log(cartId)
-        const userId = 4 //localStorage.getItem("userId");
+        const userId = localStorage.getItem("userId");
         let data = {
             item: {
                 itemId: this.state.itemid,
@@ -85,6 +87,10 @@ export default class Product extends Component {
                 }
             });
     }
+    updateShopId=(e)=>{
+        console.log(e.target.id)
+       localStorage.setItem("shopId",e.target.id)
+    }
     render() {
         console.log("cartId",localStorage.getItem('cartId'))
         let redirectVar = null;
@@ -101,7 +107,7 @@ export default class Product extends Component {
                         <div className="card mb-3 profileCard" >
                             <div className="row g-0 bottomPad">
                                 <div className="col-md-6 customOverlay">
-                                    <img src={this.state.itemImage} className="figure-img img-fluid rounded customImg" style={{ width: '647px' }} alt="..." />
+                                    <img src={this.state.itemImage} className="figure-img img-fluid rounded customImg" style={{ width: '647px',height: '647px' }} alt="..." />
                                     <button className="btn"><i className="bi bi-heart"></i></button>
                                 </div>
                                 <div className="col-md-6">
@@ -109,7 +115,7 @@ export default class Product extends Component {
                                         <h4 className="card-title fw-bolder">Product : {this.state.itemName}</h4>
                                         <div className="border-bottom">
 
-                                            <h6 className="card-subtitle mb-2 text-muted   d-inline">Shop : {this.state.shopName}</h6>  <h6 className="card-subtitle mb-2 text-muted   d-inline" >| Total Sales:{this.state.salecount}</h6>
+                                            <h6 className="card-subtitle mb-2 text-muted   d-inline">Shop : <a href={`/shopHome/${this.state.shopId}`} id={this.state.shopId} onClick={this.updateShopId}>{this.state.shopName}</a></h6>  <h6 className="card-subtitle mb-2 text-muted   d-inline" >| Total Sales:{this.state.salecount}</h6>
                                         </div>
                                         <p className="card-text"><strong>Description : </strong> {this.state.description}</p>
                                         <p className="card-text"></p>

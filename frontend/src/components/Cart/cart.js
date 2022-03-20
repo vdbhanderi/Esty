@@ -22,7 +22,7 @@ class Cart extends Component {
     //get the books data from backend  
     componentDidMount() {
         var data = {
-            userId: 4, //localStorage.getItem("userId"),
+            userId: localStorage.getItem("userId"),
             cartId: localStorage.getItem("cartId")
         }
         axios.post('http://localhost:3000/api/getCart', data)
@@ -50,7 +50,7 @@ class Cart extends Component {
 
     CheckOut = () => {
         var data = {
-            userId: 4, //localStorage.getItem("userId"),
+            userId: localStorage.getItem("userId"),
             cartId: localStorage.getItem("cartId")
         }
         localStorage.removeItem("cartId")

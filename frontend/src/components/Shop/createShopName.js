@@ -11,7 +11,7 @@ import { Navigate } from "react-router";
 
 const CreateShopNameSchema = Yup.object().shape({
     shopName: Yup.string()
-        .required("userName is required")
+        .required("Shop Name is required")
         .min(4, "Shop names must have 4–20 characters")
         .max(20, "Shop names must have 4–20 characters"),
 
@@ -105,7 +105,7 @@ export default class CreateShopName extends Component {
         console.log("Inside create shop", details);
         const data = {
             shopName: this.state.shopName,
-            userId: 1//localStorage.getItem("userId")
+            userId: localStorage.getItem("userId")
         }
         await axios.post('http://localhost:3000/api/createShop', data)
             .then(response => {

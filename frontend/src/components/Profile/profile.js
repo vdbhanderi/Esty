@@ -62,7 +62,7 @@ export default class UserProfile extends Component {
         let data = {
             useremail: localStorage.getItem("userEmail"),
             username: localStorage.getItem("username"),
-            userId: 4//localStorage.getItem("userId"),
+            userId: localStorage.getItem("userId"),
 
         }
         console.log(localStorage.getItem('userId'))
@@ -129,7 +129,7 @@ export default class UserProfile extends Component {
         console.log("Inside profile update", details);
         const data = {
             email: details.email,
-            userId: 4,
+            userId: localStorage.getItem("userId"),
             username: details.username,
             phone: details.phone,
             address: details.address,

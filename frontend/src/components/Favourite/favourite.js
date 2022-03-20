@@ -29,7 +29,7 @@ class Favourite extends Component {
         let data = {
             useremail: localStorage.getItem("userEmail"),
             userName: localStorage.getItem("userName"),
-            userId: 4//localStorage.getItem("userId"),
+            userId: localStorage.getItem("userId"),
 
         }
 
@@ -48,7 +48,7 @@ class Favourite extends Component {
         console.log("itemId",itemId)
         let data = {
             itemId: itemId,
-            userId: 4//localStorage.getItem("userId")
+            userId: localStorage.getItem("userId")
         }
         var favId = this.state.items.filter(x => x.itemId === parseInt(itemId))[0].favouriteId
         console.log("fav",favId)
@@ -78,7 +78,7 @@ class Favourite extends Component {
         let data = {
             useremail: localStorage.getItem("userEmail"),
             userName: localStorage.getItem("userName"),
-            userId: 4//localStorage.getItem("userId"),
+            userId: localStorage.getItem("userId"),
 
         }
 

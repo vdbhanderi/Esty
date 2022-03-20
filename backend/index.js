@@ -27,7 +27,7 @@ const storage = multer.diskStorage({
   }
   , filename: (req, file, cb) => {
     console.log("file multer", file)
-    cb(null, Date.now() + "-" + ".png");
+    cb(null, file.originalname);
   },
 });
 
@@ -43,7 +43,7 @@ app.post('/uploadImage', upload.single('file'), (req, res) => {
 //download-file
 app.get('/download-file/:user_image', (req, res) => {
   console.log("inside download file", req.params.user_image)
-  var image = path.join(__dirname + '/uploadedImages', req.params.user_image);
+  var image = path.join(__dirname + '/uploads', req.params.user_image);
   console.log("image path", image)
   if (fs.existsSync(image)) {
     res.sendFile(image)

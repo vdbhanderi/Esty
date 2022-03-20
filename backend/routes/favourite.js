@@ -64,7 +64,7 @@ router.post('/api/removeFavourite', function (req, res) {
 });
 
 router.post("/api/addFavourite", (req, res) => {
-    console.log("inside create shop api", req.body);
+    console.log("inside add favourite", req.body);
     const itemId = req.body.itemId;
     const userId = req.body.userId;
     const sqlInsert = "INSERT INTO FavouriteItems (itemId,userId) VALUES (?,?)";

@@ -26,6 +26,7 @@ router.post('/api/getItem', function (req, res) {
                          data = {
                             price: result[0].price,
                             shopName: result2[0].shopName,
+                            shopId: result2[0].shopId,
                             itemName: result[0].itemName,
                             itemImage: result[0].itemImage,
                             itemId: result[0].itemId,
