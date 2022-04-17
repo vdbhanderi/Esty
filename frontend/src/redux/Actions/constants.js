@@ -1,0 +1,8 @@
+export const USER_LOGIN_ERROR = 'USER_LOGIN_ERROR';
+export const USER_LOGIN_SUCCESS = 'USER_LOGIN_SUCCESS';
+export const USER_LOGOUT = 'USER_LOGOUT';
+export const GET_ITEMS="GET_ITEMS"
+export const ADD_TO_CART="ADD_TO_CART"
+export const ADD_TO_CART_ERROR="ADD_TO_CART_ERROR"
+export const REMOVE_FROM_CART="REMOVE_FROM_CART"
+
