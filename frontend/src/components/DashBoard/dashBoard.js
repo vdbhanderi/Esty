@@ -32,7 +32,7 @@ class DashBoard extends Component {
         if (localStorage.getItem("search") === null || localStorage.getItem("search") === "") {
             axios.post(`${backendUrl}/api/getItemListForDashboard`, data)
                 .then((response) => {
-                    console.log(response.data)
+                    console.log( typeof (response.data))
                     //update the state with the response data
 
                     this.setState({

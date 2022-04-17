@@ -1,15 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from 'react-router-dom';
 import {
-    // Formik, FormikHelpers, FormikProps, Form, Field, FieldProps,
+    // FormikHelpers, FormikProps, Form, Field, FieldProps,
     Formik, Form, Field, ErrorMessage
 } from 'formik';
 import cookie from 'react-cookies';
-//import { useDispatch, useSelector,connect } from 'react-redux';
 import './navbar.css'
 import * as Yup from "yup";
 import axios from "axios";
 import backendUrl from "../config";
+import { useDispatch, useSelector } from "react-redux";
+import { userLogin } from "../../redux/Actions/loginAction"
+import { getCart } from "../../redux/Actions/cart";
 const LoginSchema = Yup.object().shape({
     password: Yup.string()
         .min(2, 'Too Short!')
@@ -30,37 +32,34 @@ const RegisterSchema = Yup.object().shape({
 });
 export default function NavBar() {
     const [search, setSearch] = useState("");
-    // constructor(props) {
-    //     super(props);
-    //     this.state = {
-    //         email: '',
-    //         regEmail: '',
-    //         regPassword: '',
-    //         password: '',
-    //         name: '',
-    //         authFlag: 'false',
-    //         redirectVar: null
-    //     }
-    //     //   this.handleLogout = this.handleLogout.bind(this)
-    //     this.submitLogin = this.submitLogin.bind(this)
-    //     this.submitRegister = this.submitRegister.bind(this)
-    // }
+    var isLoggedIn = useSelector((state) => state.isLoggedIn)
+    var userInfo = useSelector((state) => state.userInfo)
+    var cart = useSelector((state) => state.cart)
+    const dispatch = useDispatch()
+    console.log("cart Data of dahsBoard",cart)
+    if(cart.length>0){
+        localStorage.setItem('cartId',cart.cartId)
+    }
+    useEffect(() => {
+        const userId = localStorage.getItem('userId')
+        var details = {
+            userId: userId
+        }
+        if (userId) {
+            dispatch(getCart(details))
+        }
+    });
 
-    // const onChange = (e) => {
-    //     const { name, value } = e.target;
-    //     setInputs((input) => ({ ...input, [name]: value }));
-    //   };
     const handleLogout = () => {
         cookie.remove('cookie', { path: '/' })
         console.log("Inside logout");
         localStorage.clear();
         cookie.remove("auth")
-
         // window.location.href = "/";
         window.location.reload();
 
     }
-    const submitLogin = (details) => {
+    const submitLogin1 = (details) => {
         console.log("Inside submit login", details);
         axios.post(`${backendUrl}/api/login`, {
             email: details.loginEmail,
@@ -73,28 +72,28 @@ export default function NavBar() {
                     console.log("status is 200 redirect page");
                     console.log("signup response api" + response.data);
                     localStorage.setItem("userId", response.data.id)
-
+                    console.log("state logged", this.state.items)
+                    console.log("state logged", this.state.isLoggedIn)
                     window.location.reload();
                     cookie.save("auth", true, {
                         path: "/",
                         httpOnly: false,
                         maxAge: 90000,
                     });
-
-
-                    cookie.save("defaultcurrency", response.data.currency, {
-                        path: "/",
-                        httpOnly: false,
-                        maxAge: 90000,
-                    });
-
                 }
             })
             .catch(
                 err => {
                     alert("username or password is not correct");
                 })
-
+    }
+    const submitLogin = (details) => {
+        console.log("Inside submit login", details);
+        var data = {
+            email: details.loginEmail,
+            password: details.password,
+        }
+        dispatch(userLogin(data))
     }
     const HandleSearch = () => {
         console.log("Inside submit login");
@@ -109,17 +108,19 @@ export default function NavBar() {
             password: details.regPassword,
         })
             .then((response) => {
-                console.log("response status is " + response);
+                console.log("response status is ", response);
                 if (response.status === 200) {
                     console.log("status is 200 redirect page");
                     console.log("signup response api" + response.data);
                     localStorage.setItem("userId", response.data)
-                    window.location.reload();
                     cookie.save("auth", true, {
                         path: "/",
                         httpOnly: false,
                         maxAge: 90000,
                     });
+                }
+                else if (response.status === 204) {
+                    alert("Email Id already exists")
                 }
             })
             .catch(
@@ -128,17 +129,14 @@ export default function NavBar() {
                 })
 
     }
-    // render() {
     let navLogin = null;
     if (localStorage.getItem('userId')) {
         console.log("Able to read token");
-
     }
     let authPanel = null
-    //  let redirectVar = <Navigate to="/"/>
 
-    if (cookie.load('auth')) {
-        // redirectVar = <Navigate to="/login"/>
+    if (isLoggedIn) {
+        localStorage.setItem("userId", userInfo.id)
         authPanel = (
             <div className="collapse navbar-collapse" id="navbarNav">
                 <ul className="navbar-nav">
@@ -164,7 +162,7 @@ export default function NavBar() {
                         <button className="btn btn-outline" type="submit"> <Link to='/cart'><i className="bi bi-cart4"></i></Link></button>
                     </li>
                     <li className="d-inline">
-                    <Link to="/"><button className="btn" type="submit"> <i className="bi bi-box-arrow-in-right" onClick={handleLogout}></i></button></Link>
+                        <Link to="/"><button className="btn" type="submit"> <i className="bi bi-box-arrow-in-right" onClick={handleLogout}></i></button></Link>
                     </li>
                 </ul>
             </div>
@@ -226,7 +224,7 @@ export default function NavBar() {
                                                 />
                                             </div>
 
-                                            <button type="submit" className="btn btn-dark loginButton rounded-pill">Sign in</button>
+                                            <button type="submit" className="btn btn-dark loginButton rounded-pill" data-bs-dismiss="modal">Sign in</button>
                                             {/* <p className="mt-5 mb-3 text-muted text-center">© 2017-2018</p> */}
 
                                         </Form>
@@ -293,7 +291,7 @@ export default function NavBar() {
                                                 />
                                             </div>
 
-                                            <button type="submit" className="btn btn-dark loginButton rounded-pill">Create Account</button>
+                                            <button type="submit" className="btn btn-dark loginButton rounded-pill" data-bs-dismiss="modal">Create Account</button>
                                         </Form>
                                     )}
                                 </Formik>
