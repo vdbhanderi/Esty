@@ -22,4 +22,14 @@ export const getCart = (state = {}, action) => {
            return state
    }
 };
+export const checkOut = (state = {}, action) => {
+    switch(action.type) {
+        case actionTypes.CHECKOUT_SUCCESS:
+            return true 
+        case actionTypes.CHECKOUT_ERROR:
+            return false 
+        default:
+            return state
+    }
+ };
 export default addToCart;

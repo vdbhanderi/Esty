@@ -1,0 +1,13 @@
+{
+    "DB":{
+        "host":"estynewdb.cb1ycgh0w0rf.us-east-1.rds.amazonaws.com",
+        "username":"admin",
+        "password":"Passb00k",
+        "port":3306,
+        "database":"test_db"
+
+    },
+    
+    "mongoDB":"mongodb+srv://virag:Passb00k@estycluster.tybrp.mongodb.net/esty?retryWrites=true&w=majority",
+    "frontendURL":"http://localhost:3001"
+}

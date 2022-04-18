@@ -130,9 +130,7 @@ export default function NavBar() {
 
     }
     let navLogin = null;
-    if (localStorage.getItem('userId')) {
-        console.log("Able to read token");
-    }
+   
     let authPanel = null
 
     if (isLoggedIn || userId) {
