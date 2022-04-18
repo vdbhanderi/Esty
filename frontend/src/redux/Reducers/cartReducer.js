@@ -5,6 +5,8 @@ import * as actionTypes from "../Actions/constants"
     switch(action.type) {
         case actionTypes.ADD_TO_CART:
             return true 
+        case actionTypes.ADD_TO_CART_ERROR:
+            return false 
         default:
             return state
     }

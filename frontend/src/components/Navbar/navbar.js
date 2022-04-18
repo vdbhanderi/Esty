@@ -36,8 +36,8 @@ export default function NavBar() {
     var userInfo = useSelector((state) => state.userInfo)
     var cart = useSelector((state) => state.cart)
     const dispatch = useDispatch()
-    console.log("cart Data of dahsBoard",cart)
-    if(cart.length>0){
+    const userId=localStorage.getItem('cartId');
+    if(cart){
         localStorage.setItem('cartId',cart.cartId)
     }
     useEffect(() => {
@@ -48,7 +48,7 @@ export default function NavBar() {
         if (userId) {
             dispatch(getCart(details))
         }
-    });
+    },[dispatch]);
 
     const handleLogout = () => {
         cookie.remove('cookie', { path: '/' })
@@ -59,34 +59,34 @@ export default function NavBar() {
         window.location.reload();
 
     }
-    const submitLogin1 = (details) => {
-        console.log("Inside submit login", details);
-        axios.post(`${backendUrl}/api/login`, {
-            email: details.loginEmail,
-            password: details.password,
-        })
-            .then((response) => {
-                console.log("response status is " + response.status);
-                if (response.status === 200) {
-                    //setuser({ ...user, redirect: "profile" });
-                    console.log("status is 200 redirect page");
-                    console.log("signup response api" + response.data);
-                    localStorage.setItem("userId", response.data.id)
-                    console.log("state logged", this.state.items)
-                    console.log("state logged", this.state.isLoggedIn)
-                    window.location.reload();
-                    cookie.save("auth", true, {
-                        path: "/",
-                        httpOnly: false,
-                        maxAge: 90000,
-                    });
-                }
-            })
-            .catch(
-                err => {
-                    alert("username or password is not correct");
-                })
-    }
+    // const submitLogin1 = (details) => {
+    //     console.log("Inside submit login", details);
+    //     axios.post(`${backendUrl}/api/login`, {
+    //         email: details.loginEmail,
+    //         password: details.password,
+    //     })
+    //         .then((response) => {
+    //             console.log("response status is " + response.status);
+    //             if (response.status === 200) {
+    //                 //setuser({ ...user, redirect: "profile" });
+    //                 console.log("status is 200 redirect page");
+    //                 console.log("signup response api" + response.data);
+    //                 localStorage.setItem("userId", response.data.id)
+    //                 console.log("state logged", this.state.items)
+    //                 console.log("state logged", this.state.isLoggedIn)
+    //                 window.location.reload();
+    //                 cookie.save("auth", true, {
+    //                     path: "/",
+    //                     httpOnly: false,
+    //                     maxAge: 90000,
+    //                 });
+    //             }
+    //         })
+    //         .catch(
+    //             err => {
+    //                 alert("username or password is not correct");
+    //             })
+    // }
     const submitLogin = (details) => {
         console.log("Inside submit login", details);
         var data = {
@@ -135,8 +135,8 @@ export default function NavBar() {
     }
     let authPanel = null
 
-    if (isLoggedIn) {
-        localStorage.setItem("userId", userInfo.id)
+    if (isLoggedIn || userId) {
+        if(userInfo){localStorage.setItem("userId", userInfo.id)}
         authPanel = (
             <div className="collapse navbar-collapse" id="navbarNav">
                 <ul className="navbar-nav">

@@ -8,6 +8,6 @@ export default combineReducers({
   isLoggedIn: loginUserReducer,
   items:getItemsReducer,
   userInfo: loginUserDetails,
-  cartId:addToCart,
+  isCartAdded:addToCart,
   cart:getCart
 });

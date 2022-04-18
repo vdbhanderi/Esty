@@ -7,5 +7,5 @@
         "database":"test_db"
 
     },
-    "frontendURL":"http://54.219.159.202:3001"
+    "frontendURL":"http://localhost:3001"
 }
