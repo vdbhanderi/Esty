@@ -2,6 +2,7 @@ import { combineReducers } from 'redux';
 import {loginUserReducer,loginUserDetails} from './loginUserReducer';
 import getItemsReducer from './dashboardReducer';
 import addToCart, { checkOut, getCart } from './cartReducer';
+import { getOrderedItems } from './itemsReducers';
 
 
 export default combineReducers({
@@ -10,5 +11,6 @@ export default combineReducers({
   userInfo: loginUserDetails,
   isCartAdded:addToCart,
   cart:getCart,
-  isOrdered:checkOut
+  isOrdered:checkOut,
+  orderedItems:getOrderedItems
 });

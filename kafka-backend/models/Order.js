@@ -7,27 +7,30 @@ const orderSchema = new Schema({
   },
   items: [{
     itemId: {
-        type: String,
+      type: String,
     },
     itemName: String,
     itemImage: String,
     shopName: String,
     price: {
-        type: Number
-      },
-    quantity: {
-        type: Number,
-        required: true,
-        min: [1, 'Quantity can not be less then 1.'],
-        default: 1
+      type: Number
     },
-    giftDesc:{
-        type: String,
-        default: ""
+    quantity: {
+      type: Number,
+      required: true,
+      min: [1, 'Quantity can not be less then 1.'],
+      default: 1
+    },
+    giftDesc: {
+      type: String,
+      default: ""
+    },
+    itemPurchaseDate: {
+      type: Date,
+      default: ""
     }
-}],
-  purchaseDate:Date
+  }],
+  purchaseDate: Date
 });
 
-module.exports=Cart=mongoose.model('order', orderSchema);
-   
+module.exports = Cart = mongoose.model('order', orderSchema);

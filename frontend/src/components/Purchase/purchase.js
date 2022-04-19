@@ -52,9 +52,10 @@ export default class Purchase extends Component {
                         </div>
                     </th>
                     <td className="border-0 align-middle"><strong>{item.shopName}</strong></td>
-                    <td className="border-0 align-middle"><strong>{item.purchaseDate}</strong></td>
+                    <td className="border-0 align-middle"><strong>{item.itemPurchaseDate}</strong></td>
                     <td className="border-0 align-middle"><strong>{item.price}</strong></td>
                     <td className="border-0 align-middle"><strong>{item.quantity}</strong></td>
+                    <td className="border-0 align-middle"><strong>{item.giftDesc}</strong></td>
 
                 </tr>
 
@@ -89,6 +90,9 @@ export default class Purchase extends Component {
                                                     </th>
                                                     <th scope="col" className="border-0 bg-light">
                                                         <div className="py-2 text-uppercase">Quantity</div>
+                                                    </th>
+                                                    <th scope="col" className="border-0 bg-light">
+                                                        <div className="py-2 text-uppercase">Gift Description</div>
                                                     </th>
                                                 </tr>
                                             </thead>

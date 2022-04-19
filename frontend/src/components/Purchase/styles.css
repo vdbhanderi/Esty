@@ -1,0 +1,22 @@
+
+div[class="react-bootstrap-table"] td{
+  padding: 0.5rem 0.5rem;
+  border:none;
+}
+div[class="react-bootstrap-table"] tr th{
+  border:none;
+}
+
+div[class="purchaseTable"]{
+  overflow-x: hidden;
+}
+.purchaseTable{
+  min-height: 500px;
+}
+ .open {
+  float: left;
+}
+#pageDropDown{
+  float: left;
+  margin-left: 20px;
+}

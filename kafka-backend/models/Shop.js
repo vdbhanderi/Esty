@@ -20,7 +20,7 @@ const ShopSchema = new Schema({
     type: String,
     default: ""
   },
-  shopEmail: {
+  shopPhone: {
     type: String,
     default: "1234567890"
   },
@@ -31,5 +31,5 @@ const ShopSchema = new Schema({
  
 });
 
-exports.Shops = mongoose.model('Shops', ShopSchema);
+exports.Shop = mongoose.model('Shop', ShopSchema);
 exports.ShopSchema = ShopSchema;
