@@ -25,7 +25,7 @@ const itemSchema = new mongoose.Schema({
     type: String
   },
   category: {
-    type: String
+    type: mongoose.Schema.Types.ObjectId
   },
   shopId: {
     type: mongoose.Schema.Types.ObjectId

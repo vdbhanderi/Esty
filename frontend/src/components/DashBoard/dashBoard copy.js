@@ -57,7 +57,7 @@ function DashBoard() {
                         <Link to={`/product/${item._id}`}>
                             <img alt='' src={`${item.itemImage}`} id={`${item._id}`} style={{ "background": `no-repeat center`, "backgroundSize": "cover", "width": "290px", height: "290px" }} ></img>
                         </Link>
-                        {item.favouriteId != null && item.userId === parseInt(localStorage.getItem("userId")) ? <span className="new heart" id={item.itemId} >&#9829;</span> :
+                        {item.favouriteId != null && item.userId === localStorage.getItem("userId") ? <span className="new heart" id={item.itemId} >&#9829;</span> :
                             <span className="new heart1" id={item.itemId} onClick={HandleFavourite} >&#9825;</span>}
                     </div>
                     <div className="part-2" >

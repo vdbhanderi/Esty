@@ -7,8 +7,8 @@ const con=mysql.createPool({
     database:"esty",
 
 })
-// con.getConnection(error => {
-//     if (error) throw error;
-//     console.log("Successfully connected to the database.");
-//   });
+con.getConnection(error => {
+    if (error) throw error;
+    console.log("Successfully connected to the database.");
+  });
 module.exports=con

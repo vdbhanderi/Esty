@@ -18,7 +18,7 @@ const ShopSchema = new Schema({
   },
   shopEmail: {
     type: String,
-    default: ""
+    default: "test@gmail.com"
   },
   shopPhone: {
     type: String,
@@ -31,5 +31,4 @@ const ShopSchema = new Schema({
  
 });
 
-exports.Shop = mongoose.model('Shop', ShopSchema);
-exports.ShopSchema = ShopSchema;
+module.exports = Shop = mongoose.model('shop', ShopSchema);

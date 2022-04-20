@@ -7,9 +7,6 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import $ from 'jquery';
 import backendUrl from '../config';
-//import rootUrl from "../config";
-
-
 
 const UpdateShopSchema = Yup.object().shape({
     price: Yup.string()
@@ -74,15 +71,15 @@ export default class ShopHome extends Component {
         await axios.post(`${backendUrl}/api/getShopDetails`, data)
             .then((response) => {
                 //update the state with the response data
-                console.log('Shop Deatils', response.data[0].shopEmail)
+                console.log('Shop Deatils', response.data)
                 this.setState({
-                    shopEmail: response.data[0].shopEmail,
-                    shopImage: response.data[0].shopImage,
-                    shopName: response.data[0].shopName
+                    shopEmail: response.data.shopEmail,
+                    shopImage: response.data.shopImage,
+                    shopName: response.data.shopName
                 });
-                console.log("first", response.data[0].userId)
+                console.log("first", response.data.userId)
 
-                if (response.data[0].userId === parseInt(this.state.userId)) {
+                if (response.data.userId === this.state.userId) {
                     this.setState({
                         isOwner: true
                     })
@@ -100,6 +97,7 @@ export default class ShopHome extends Component {
 
             });
     }
+    
     componentWillUnmount(){
         localStorage.removeItem("shopId")
     }
@@ -215,7 +213,7 @@ export default class ShopHome extends Component {
             })
             return
         }
-        console.log(e.target.id)
+        console.log("target Id",e.target.id)
         await axios.post(`${backendUrl}/api/getItemDetails`, { itemId: e.target.id })
             .then((response) => {
                 //update the state with the response data
@@ -226,7 +224,7 @@ export default class ShopHome extends Component {
                     itemName: response.data[0].itemName,
                     category: response.data[0].category,
                     itemImage: response.data[0].itemImage,
-                    itemId: response.data[0].itemId,
+                    _id: response.data[0]._id,
                     quantity: response.data[0].quantity
                 });
             });
@@ -298,11 +296,11 @@ export default class ShopHome extends Component {
                     <td className="border-0 align-middle"><strong>{item.totalSale}</strong></td>
                     {
                         (this.state.isOwner && item.itemName) ?
-                            <td className="border-0 align-middle " style={{ display: 'none' }}>{item.itemId}</td>
+                            <td className="border-0 align-middle " style={{ display: 'none' }}>{item._id}</td>
                             : null
                     }
                     {(this.state.isOwner && item.itemName) ?
-                        <td className="border-0 align-middle"><button className="btn btn-primary" id={item.itemId} name='edit' data-bs-toggle="modal" data-bs-target="#editModal" type="submit" onClick={this.changeAddupdateValue}>Edit Item</button>
+                        <td className="border-0 align-middle"><button className="btn btn-primary" id={item._id} name='edit' data-bs-toggle="modal" data-bs-target="#editModal" type="submit" onClick={this.changeAddupdateValue}>Edit Item</button>
                         </td>
                         : null
                     }
@@ -314,7 +312,7 @@ export default class ShopHome extends Component {
         let categories = this.state.categoriesList.length > 0
             && this.state.categoriesList.map((item, i) => {
                 return (
-                    <option key={item.categoryId} value={item.categoryId}>{item.categoryName}</option>
+                    <option key={item._id} value={item._id}>{item.categoryName}</option>
                 )
             }, this);
         return (
