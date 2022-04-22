@@ -19,7 +19,8 @@ const itemSchema = new mongoose.Schema({
     type: Number
   },
   totalSale: {
-    type: Number
+    type: Number,
+    default:0
   },
   itemImage: {
     type: String

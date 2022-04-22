@@ -1,6 +1,8 @@
 const express = require('express')
-const con = require('../databse')
+const con = require('../databse');
+const { ADDFAVOURITE_TOPIC, REMOVEFAVOURITE_TOPIC } = require('../kafka/topics');
 const router = new express.Router()
+var kafka = require("../kafka/client");
 
 router.post('/api/getFavouriteItemsbyUserID', function (req, res) {
     console.log("inside the FavouriteItems Name")
@@ -30,7 +32,7 @@ router.post('/api/getFavouriteItemsbyUserID', function (req, res) {
         }
     });
 });
-router.post('/api/removeFavourite', function (req, res) {
+router.post('/api/removeFavourite1', function (req, res) {
     console.log("remove favourite")
     console.log(req.body)
     console.log(req.params)
@@ -62,8 +64,26 @@ router.post('/api/removeFavourite', function (req, res) {
         }
     });
 });
+router.post("/api/removeFavourite", (req, res) => {
+    console.log("removeFavourite");
+    console.log("Req Body : ", req.body);
 
-router.post("/api/addFavourite", (req, res) => {
+    kafka.make_request(REMOVEFAVOURITE_TOPIC, req.body, function (err, results) {
+        console.log("In make request call back");
+        console.log(results);
+        console.log(err);
+        if (err) {
+            console.log("Inside err");
+            console.log(err);
+            return res.status(err.status).send(err.message);
+        } else {
+            console.log("Inside else");
+          //  console.log(results);
+            return res.status(results.status).send(results.data);
+        }
+    });
+});
+router.post("/api/addFavourite1", (req, res) => {
     console.log("inside add favourite", req.body);
     const itemId = req.body.itemId;
     const userId = req.body.userId;
@@ -81,4 +101,23 @@ router.post("/api/addFavourite", (req, res) => {
     });
 });
 
+router.post("/api/addFavourite", (req, res) => {
+    console.log("addFavourite");
+    console.log("Req Body : ", req.body);
+
+    kafka.make_request(ADDFAVOURITE_TOPIC, req.body, function (err, results) {
+        console.log("In make request call back");
+        console.log(results);
+        console.log(err);
+        if (err) {
+            console.log("Inside err");
+            console.log(err);
+            return res.status(err.status).send(err.message);
+        } else {
+            console.log("Inside else");
+          //  console.log(results);
+            return res.status(results.status).send(results.data);
+        }
+    });
+});
 module.exports = router

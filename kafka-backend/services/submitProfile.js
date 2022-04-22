@@ -2,6 +2,8 @@ const User = require('../models/User');
 
 const handle_request = async (msg, callback) => {
     console.log("inside update shop api", msg);
+    const res = {};
+
     //const { phone, firstName,state } = msg;
     const phone = msg.phone;
     const firstName = msg.firstName;

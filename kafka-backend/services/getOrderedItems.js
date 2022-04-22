@@ -4,6 +4,8 @@ const Shop = require('../models/Shop');
 const handle_request = async (msg, callback) => {
     console.log("inside the getShopDetails in KAFKA")
     const { userId } = msg;
+    const res = {};
+
     console.log(`getShopDetails Id : ${userId}`);
     var items = [];
     Order.find({ userId: userId }, (err, result) => {

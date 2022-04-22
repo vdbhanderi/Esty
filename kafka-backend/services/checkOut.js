@@ -1,8 +1,11 @@
+const cart = require('../models/cart');
 const Item = require('../models/item');
 const Order = require('../models/Order');
 
 const handle_request = async (msg, callback) => {
     const { userId, cartId } = msg;
+    const res = {};
+    console.log("inside checkout kafka",msg)
     var items = msg.items;
     var today = new Date();
     var dd = String(today.getDate()).padStart(2, '0');
@@ -25,7 +28,7 @@ const handle_request = async (msg, callback) => {
                 res.end("Database issues");
             }
             else {
-                Cart.findByIdAndRemove(cartId).then(result2 => {
+                cart.findByIdAndRemove(cartId).then(result2 => {
                     data = true
                     console.log("results for insertation", result2);
                     console.log(result)
@@ -45,7 +48,7 @@ const handle_request = async (msg, callback) => {
     })
 }
 const updateItems = async (items) => {
-    // console.log(items)
+ console.log(items)
    await items.forEach(obj => {
         Item.findOne({_id:obj['itemId']},(err,result)=>{
             Item.updateOne({ _id: obj['itemId'] }, { $set: { quantity: (result['quantity'] - obj['quantity']),totalSale: (result['totalSale'] + obj['quantity'])} },(er,re)=>{

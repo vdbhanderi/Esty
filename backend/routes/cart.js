@@ -1,8 +1,10 @@
 const express = require('express')
-const con = require('../databse')
+const con = require('../databse');
+const { GETCART_TOPIC, CHECKOUT_TOPIC, ADDTOCART_TOPIC } = require('../kafka/topics');
 const router = new express.Router()
+var kafka = require("../kafka/client");
 
-router.post('/api/getCart', function (req, res) {
+router.post('/api/getCart1', function (req, res) {
     console.log("inside the cart Name")
     console.log(req.body)
     const userId = req.body.userId;
@@ -38,7 +40,26 @@ router.post('/api/getCart', function (req, res) {
         }
     });
 });
-router.post('/api/checkOut', function (req, res) {
+router.post("/api/getCart", (req, res) => {
+    console.log("get Cart");
+    console.log("Req Body : ", req.body);
+
+    kafka.make_request(GETCART_TOPIC, req.body, function (err, results) {
+        console.log("In make request call back");
+        console.log(results);
+        console.log(err);
+        if (err) {
+            console.log("Inside err");
+            console.log(err);
+            return res.status(err.status).send(err.message);
+        } else {
+            console.log("Inside else");
+            console.log(results);
+            return res.status(results.status).send(results.data);
+        }
+    });
+});
+router.post('/api/checkOut1', function (req, res) {
     console.log("inside the shop deatils")
     console.log(req.body)
     const userId = req.body.userId;
@@ -69,6 +90,25 @@ router.post('/api/checkOut', function (req, res) {
         }
     });
 });
+router.post("/api/checkOut", (req, res) => {
+    console.log("checkOut");
+    console.log("Req Body : ", req.body);
+
+    kafka.make_request(CHECKOUT_TOPIC, req.body, function (err, results) {
+        console.log("In make request call back");
+        console.log(results);
+        console.log(err);
+        if (err) {
+            console.log("Inside err");
+            console.log(err);
+            return res.status(err.status).send(err.message);
+        } else {
+            console.log("Inside else");
+            console.log(results);
+            return res.status(results.status).send(results.data);
+        }
+    });
+});
 FetchCartData = (cartId) => {
     return new Promise(resolve => {
         setTimeout(() => {
@@ -91,7 +131,7 @@ FetchCartData = (cartId) => {
     });
 
 }
-router.post("/api/addToCart", (req, res) => {
+router.post("/api/addToCart1", (req, res) => {
     console.log("inside create shop api", req.body);
     const cartId = req.body.cartId;
     const userId = req.body.userId;
@@ -154,5 +194,23 @@ router.post("/api/addToCart", (req, res) => {
     }
 
 });
+router.post("/api/addToCart", async (req, res) => {
+    console.log("checkOut");
+    console.log("Req Body : ", req.body);
 
+    kafka.make_request(ADDTOCART_TOPIC, req.body, function (err, results) {
+        console.log("In make request call back");
+        console.log(results);
+        console.log(err);
+        if (err) {
+            console.log("Inside err");
+            console.log(err);
+            return res.status(err.status).send(err.message);
+        } else {
+            console.log("Inside else");
+           // console.log(results);
+            return res.status(results.status).send(results.data);
+        }
+    });
+});
 module.exports = router

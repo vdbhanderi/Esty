@@ -1,9 +1,10 @@
-const Shop = require('../models/Shop');
+const User = require('../models/User');
 
 const handle_request = async (msg, callback) => {
     console.log("inside the getItem in KAFKA")
     const { userId } = msg;
     console.log(`getItem Id : ${userId}`);
+    const res = {};
 
     console.log(msg)
     await User.findById(userId).then(result => {

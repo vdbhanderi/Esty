@@ -1,12 +1,13 @@
-const Shop = require('../models/Shop');
+const cart = require('../models/cart');
 
 const handle_request = async (msg, callback) => {
     console.log("inside the getCart in KAFKA")
     const { userId } = msg;
     console.log(`getItem Id : ${userId}`);
-  
+    const res = {};
+
     var data = {}
-    await Cart.findOne({ userId: userId }, (err, result) => {
+    await cart.findOne({ userId: userId }, (err, result) => {
         if (err) {
             console.log(err)
             res.status(500).send("Something is broken")

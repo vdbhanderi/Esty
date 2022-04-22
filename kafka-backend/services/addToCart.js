@@ -4,6 +4,7 @@ const handle_request = async (msg, callback) => {
     console.log("inside add to cart api", msg);
     const { userId, cartId } = msg;
     var newitem = msg.item;
+    const res = {};
 
     var today = new Date();
     var dd = String(today.getDate()).padStart(2, '0');

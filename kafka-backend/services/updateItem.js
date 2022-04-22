@@ -2,7 +2,7 @@ const Category = require('../models/Category');
 const item = require('../models/item');
 
 const handle_request = async (msg, callback) => {
-
+    const res = {};
     console.log("inside update Item", msg);
     const itemName = msg.itemName;
     const description = msg.description;

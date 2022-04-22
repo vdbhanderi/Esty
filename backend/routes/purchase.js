@@ -1,52 +1,22 @@
 const express = require('express')
-const con = require('../databse')
+const { GETORDEREDITEMS_TOPIC } = require('../kafka/topics');
 const router = new express.Router()
+var kafka = require("../kafka/client");
 
 router.post('/api/getOrderedItems', function (req, res) {
-    console.log("inside the purchaseList")
-    console.log(req.body)
-    const userId = req.body.userId;
-    console.log(userId)
-
-    const sqlget = "Select * from Cart WHERE userId=? and status='ordered'";
-    con.query(sqlget, [userId], (error, result) => {
-        if (!error) {
-            console.log("inside itemList query");
-            var array = [];
-            console.log(result.length)
-            for (var i = 0; i < result.length; i++) {
-                var parsedData = JSON.parse(result[i].items)
-                var purchaseDate = result[i].purchaseDate
-                console.log("parsedata", parsedData)
-                parsedData.forEach(element => {
-
-                    var item = {
-                        price: element.price,
-                        quantity: element.quantity,
-                        itemImage: element.itemImage,
-                        itemName: element.itemName,
-                        shopName: element.shopName,
-                        purchaseDate: purchaseDate,
-                    }
-                     console.log(item)
-                    array=array.concat(item)
-                });
-                //array
-            }
-
-            console.log("arra",array);
-            if (result.length != 0) {
-                res.status(200).send(JSON.stringify(array));
-                return
-            }
-            res.writeHead(204, {
-                "Content-Type": "text/plain",
-            });
-            res.end(" there is no items");
-
+   
+    kafka.make_request(GETORDEREDITEMS_TOPIC, req.body, function (err, results) {
+        console.log("In make request call back");
+        console.log(results);
+        console.log(err);
+        if (err) {
+            console.log("Inside err");
+            console.log(err);
+            return res.status(err.status).send(err.message);
         } else {
-            console.log(error)
-            res.status(500).send('Something broke!')
+            console.log("Inside else");
+            console.log(results);
+            return res.status(results.status).send(results.data);
         }
     });
 });

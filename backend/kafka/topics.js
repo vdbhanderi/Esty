@@ -1,23 +1,29 @@
-//export const DASHBOARd_TOPIC="DASHBOARD_TOPIC";
-export const UPDATEITEM_TOPIC="updateItem_topic";
-export const ADDITEM_TOPIC="AddItem_topic";
-export const ADDTOCART_TOPIC="addToCart_topic";
-export const checkOut_TOPIC="checkOut_topic";
-export const DASHBOARD_TOPIC="dashboard"
-export const CREATESHOP_TOPIC="createShop_topic";
-export const GETCART_TOPIC="getCart_topic";
-export const GETCATEGORIES_TOPIC="getCategories_topic";
-export const GETITEM_TOPIC="getItem_topic";
-export const GETITEMDETAILS_TOPIC="getItemDetails_topic";
-export const GETITEMLISTBYSHOPID_TOPIC="getItemListbyShopID_topic";
-export const GETORDEREDITEMS_TOPIC="getOrderedItems_topic";
-export const GETPROFILE_TOPIC="getProfile_topic";
-export const GETSHOPDETAILS_TOPIC="getShopDetails_topic";
-export const GETSHOPDETAILSBYUSERID_TOPIC="getShopDetailsbyUserId_topic";
-export const GETSHOPNAME_TOPIC="getShopName_topic";
-export const PASSPORT_TOPIC="passport_topic";
-export const REGISTER_TOPIC="register_topic";
-export const REMOVEFAVOURITE_TOPIC="removeFavourite_topic";
-export const SUBMITPROFILE_TOPIC="submitProfile_topic";
-export const UPDATEITEM_TOPIC="updateItem_topic";
-export const UPDATESHOP_TOPIC="updateShop_topic";
+const DASHBOARd_TOPIC="DASHBOARD_TOPIC";
+const ADDFAVOURITE_TOPIC="addFavourite_topic";
+const ADDITEM_TOPIC="AddItem_topic";
+const ADDTOCART_TOPIC="addToCart_topic";
+const CHECKOUT_TOPIC="checkOut_topic";
+const GETITEMLISTFORDASHBOARD_TOPIC="getItemListForDashboard_topic";
+const CREATESHOP_TOPIC="createShop_topic";
+const GETCART_TOPIC="getCart_topic";
+const GETCATEGORIES_TOPIC="getCategories_topic";
+const GETITEM_TOPIC="getItem_topic";
+const GETITEMDETAILS_TOPIC="getItemDetails_topic";
+const GETITEMLISTBYSHOPID_TOPIC="getItemListbyShopID_topic";
+const GETORDEREDITEMS_TOPIC="getOrderedItems_topic";
+const GETPROFILE_TOPIC="getProfile_topic";
+const GETSHOPDETAILS_TOPIC="getShopDetails_topic";
+const GETSHOPDETAILSBYUSERID_TOPIC="getShopDetailsbyUserId_topic";
+const GETSHOPNAME_TOPIC="getShopName_topic";
+const PASSPORT_TOPIC="passport_topic";
+const REGISTER_TOPIC="register_topic";
+const REMOVEFAVOURITE_TOPIC="removeFavourite_topic";
+const SUBMITPROFILE_TOPIC="submitProfile_topic";
+const UPDATEITEM_TOPIC="updateItem_topic";
+const UPDATESHOP_TOPIC="updateShop_topic";
+module.exports={
+    DASHBOARd_TOPIC,ADDFAVOURITE_TOPIC,UPDATEITEM_TOPIC,ADDITEM_TOPIC,ADDTOCART_TOPIC,CHECKOUT_TOPIC,GETITEMLISTFORDASHBOARD_TOPIC,CREATESHOP_TOPIC,GETCART_TOPIC,GETCATEGORIES_TOPIC,
+    GETITEM_TOPIC,GETITEMDETAILS_TOPIC,GETITEMLISTBYSHOPID_TOPIC,GETORDEREDITEMS_TOPIC,GETPROFILE_TOPIC,GETSHOPDETAILS_TOPIC,GETSHOPDETAILSBYUSERID_TOPIC,
+    GETSHOPNAME_TOPIC,PASSPORT_TOPIC,REGISTER_TOPIC,REMOVEFAVOURITE_TOPIC,SUBMITPROFILE_TOPIC,UPDATESHOP_TOPIC
+
+}

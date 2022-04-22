@@ -4,6 +4,7 @@ const handle_request = async (msg, callback) => {
     console.log("inside update shop api", msg);
     const { shopName, shopImage } = msg;
     console.log(`getShopDetails Id : ${shopName}`);
+    const res = {};
 
     Shop.findOneAndUpdate({ shopName: shopName }, { shopImage: shopImage },
         function (err, result) {

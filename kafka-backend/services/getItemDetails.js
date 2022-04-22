@@ -4,6 +4,7 @@ const handle_request = async (msg, callback) => {
     console.log("inside the getItemDetails in KAFKA")
     const { itemId } = msg;
     console.log(`getItemDetails Id : ${itemId}`);
+    const res = {};
 
 
     await Item.find({ _id: msg.itemId })

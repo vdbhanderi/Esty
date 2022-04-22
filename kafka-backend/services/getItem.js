@@ -1,12 +1,14 @@
-const Shop = require('../models/Shop');
+const item = require('../models/item');
 
 const handle_request = async (msg, callback) => {
     console.log("inside the getItem in KAFKA")
+    const res = {};
+
     const { itemId } = msg;
     console.log(`getItem Id : ${itemId}`);
     await item.findById(itemId)
         .then((result) => {
-            console.log(result)
+            console.log("results",result)
             if (result) {
                 res.status = 200;
                 res.data = JSON.stringify(result);

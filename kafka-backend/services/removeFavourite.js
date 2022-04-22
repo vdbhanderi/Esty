@@ -6,7 +6,7 @@ const handle_request = async (msg, callback) => {
     console.log(`User Id : ${userId}`);
     console.log(`User Id : ${itemId}`);
     User.findById(userId,async(err,result)=>{
-       
+        const res = {}; 
         if(!err){
             var oldfavouriteIds=result.favouriteIds;
             console.log("oldFav",oldfavouriteIds)

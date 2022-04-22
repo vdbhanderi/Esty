@@ -4,6 +4,7 @@ const handle_request = async (msg, callback) => {
     console.log("inside the getShopDetails in KAFKA")
     const { shopId } = msg;
     console.log(`getShopDetails Id : ${shopId}`);
+    const res = {};
 
     Shop.findById(shopId, (err, results) => {
         if (!err) {

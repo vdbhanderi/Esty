@@ -1,6 +1,8 @@
 var express = require("express");
 var router = express.Router();
 var connection = require('../databse')
+var kafka = require("../kafka/client");
+
 router.post("/api/register", (req, res) => {
   console.log("inside signup api" + req.body);
   const username = req.body.username;

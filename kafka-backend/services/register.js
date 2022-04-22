@@ -5,7 +5,7 @@ const handle_request = async (msg, callback) => {
     console.log("inside the register in KAFKA")
     const { shopId } = msg;
     console.log(`register Id : ${shopId}`);
-
+    const res = {};
 
     await User.find({ email: email }, async (err, result) => {
         console.log("res", result)
