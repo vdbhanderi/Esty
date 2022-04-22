@@ -1,23 +1,42 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useSelector, useDispatch } from 'react-redux'
 import Footer from "../Footer/footer";
 import NavBar from "../Navbar/navbar";
 import './dashboard.css'
 import { Link } from "react-router-dom";
-import { GetItems } from '../../redux/Actions/dashboardAction'
+import { AddFavouriteIds, GetItems, RemoveFavouriteIds } from '../../redux/Actions/dashboardAction'
 import backendUrl from "../config";
 
 function DashBoard() {
     var items = useSelector((state) => state.items)
-    console.log(typeof items)
     var isLoggedIn = useSelector((state) => state.isLoggedIn)
-
+    var favIds = useSelector((state) => state.favIds)
+    //const[favIds,setFavIds]=useState([])
     const dispatch = useDispatch();
-
+    const [isFavUpdated,setFavUpdated]=useState(false)
+    useEffect(() => 
+    {
+        console.log("inside userId")
+        let data = {
+            userId: localStorage.getItem("userId")
+        }
+         axios.post(`${backendUrl}/api/getProfile`, data)
+        .then((response) => {
+            if(response.data.favouriteIds){
+                //setFavIds(response.data.favouriteIds);
+                favIds=response.data.favouriteIds
+                console.log(favIds)
+            }
+        });
+    }, [ isFavUpdated])
     useEffect(() => {
-        dispatch(GetItems())
-    }, [dispatch, isLoggedIn])
+        if(!items){
+            dispatch(GetItems())
+        }
+    }, [dispatch, isLoggedIn, items])
+   
+
     const HandleFavourite = (e) => {
         console.log("inside favourite");
         var itemId = e.target.id
@@ -26,26 +45,34 @@ function DashBoard() {
             itemId: itemId,
             userId: localStorage.getItem("userId")
         }
-        var favId = this.state.items.filter(x => x.itemId === parseInt(itemId))[0].favouriteId
-        console.log("fav", favId)
-        if (favId == null) {
-            axios.post(`${backendUrl}/api/addFavourite`, data)
-                .then((response) => {
-                    console.log(response.data)
-                    this.setState({
-                        items: this.state.items.concat(response.data)
-                    });
+        //var favId = items.filter(x => x.itemId === parseInt(itemId))[0].favouriteId
+       // console.log("fav", favId)
+        if (favIds && favIds.includes(itemId)) {
+            console.log("inside remove fav")
 
-                });
+            dispatch(RemoveFavouriteIds(data))
+            setFavUpdated(true)
         }
         else {
-            axios.post(`${backendUrl}/api/removeFavourite`, data)
-                .then((response) => {
-                    console.log(response.data)
-                });
+            console.log("inside add fav")
+            dispatch(AddFavouriteIds(data))
+            setFavUpdated(true)
         }
-        window.location.reload()
+        //window.location.reload()
 
+    }
+    if(items){
+        console.log("favIDSsss",favIds)
+        items.forEach(function (element) {
+            if(favIds){
+                if(favIds.includes(element._id)){
+                    element.favouriteId=true
+                }
+                else{
+                    element.favouriteId=false
+                }
+            }
+          });
     }
     var itemrows;
     if (items !== null) {
@@ -57,8 +84,8 @@ function DashBoard() {
                         <Link to={`/product/${item._id}`}>
                             <img alt='' src={`${item.itemImage}`} id={`${item._id}`} style={{ "background": `no-repeat center`, "backgroundSize": "cover", "width": "290px", height: "290px" }} ></img>
                         </Link>
-                        {item.favouriteId != null && item.userId === localStorage.getItem("userId") ? <span className="new heart" id={item.itemId} >&#9829;</span> :
-                            <span className="new heart1" id={item.itemId} onClick={HandleFavourite} >&#9825;</span>}
+                        {item.favouriteId  ? <span className="new heart" id={item._id} onClick={HandleFavourite} >&#9829;</span> :
+                            <span className="new heart1" id={item._id} onClick={HandleFavourite} >&#9825;</span>}
                     </div>
                     <div className="part-2" >
                         <h3 className="product-title text-start"><strong>Item Name: </strong>{item.itemName}</h3>

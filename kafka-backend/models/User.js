@@ -45,22 +45,25 @@ const usersSchema = new Schema({
     default:''
 
   },
-  address:{
+  city:{
     type: String,
     default:''
   },
-  city:{
+  gender:{
     type: String,
     default:''
   },
   dob:{
     type: String,
     default:''
-
   },
   userImage: {
     type: String,
     default: 'https://testbucket9696.s3.us-east-2.amazonaws.com/userImages/default-pic.png',
+  },
+  favouriteIds: {
+    type: Array,
+    default:[]
   },
 },
 {

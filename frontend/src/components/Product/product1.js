@@ -20,7 +20,8 @@ export default function Product() {
         const data = { itemId: id }
         axios.post(`${backendUrl}/api/getItem`, data)
             .then(response => {
-                setItem(response.data[0])
+                console.log(response.data)
+                setItem(response.data)
             });
     }, [id]);
 
@@ -65,7 +66,7 @@ export default function Product() {
                                 <button className="btn"><i className="bi bi-heart"></i></button>
                             </div>
                             <div className="col-md-6">
-                                <div className="card-body text-start">
+                                <div className="card-body text-start productCss">
                                     <h4 className="card-title fw-bolder">Product : {item.itemName}</h4>
                                     <div className="border-bottom">
 
