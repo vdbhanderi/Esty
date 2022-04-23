@@ -15,7 +15,10 @@ const handle_request = async (msg, callback) => {
             console.log(newItems)
             console.log(newItems.length > 0)
             if(newItems.length > 0){
-                cart.findByIdAndUpdate(result._id,{items:newItems},(err,result2)=>{
+                newItems.forEach(i => {
+                    totalamount += (i.price * i.quantity)
+                });
+                cart.findByIdAndUpdate(result._id,{items:newItems,totalamount:totalamount},(err,result2)=>{
                     if(!err){
                         res.status = 200;
                         console.log(result2)

@@ -73,7 +73,7 @@ export default class UserProfile extends Component {
             console.log("Status Code : ", response.data);
             if (response.status === 200) {
                 this.setState({
-                    fullname: response.data.firstName,//response.data.address,    
+                    fullname: response.data.fullname,//response.data.address,    
                     email: response.data.email,//response.data.address,    
                     zip: response.data.zip, 
                     state: response.data.state, 

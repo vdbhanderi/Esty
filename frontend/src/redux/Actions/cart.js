@@ -12,7 +12,7 @@ export const addToCart = (details) => (dispatch) => {
       payload: response.data,
     })
     console.log("response of reducer",response.status)
-    if(response.status === 204) { alert("username or password is not correct")};
+    console.log("response of reducer",response.data)
   }
     )
     .catch((error) => {
@@ -54,6 +54,7 @@ export const updateQunatity = (details) => (dispatch) => {
       payload: response.data,
     })
     console.log("response of reducer",response.status)
+    console.log("response of reducer",response.data)
   
   }
     )

@@ -19,16 +19,25 @@ const handle_request = async (msg, callback) => {
         }
 
         console.log("Updated items", items)
-    
-        Cart.findByIdAndUpdate(existingCart._id, { items: items }, (err, result) => {
+        totalamount = 0;
+        items.forEach(i => {
+            totalamount += (i.price * i.quantity)
+        });
+        Cart.findByIdAndUpdate(existingCart._id, { items: items,totalamount:totalamount }, (err, result) => {
             if (err) {
                 console.log("error", err)
                 res.status = 500;
                 callback(null, 'error');
             }
             else {
-                console.log(result)
+                data = {
+                    cartId: result._id,
+                    items: result.items
+                }
                 res.status = 200;
+                res.data = JSON.stringify(data);
+                //console.log(result)
+                //res.status = 200;
                 callback(null, res)
             }
         })

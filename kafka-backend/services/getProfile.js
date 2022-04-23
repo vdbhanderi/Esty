@@ -1,7 +1,7 @@
 const User = require('../models/User');
 
 const handle_request = async (msg, callback) => {
-    console.log("inside the getItem in KAFKA")
+    console.log("inside the getProfile in KAFKA")
     const { userId } = msg;
     console.log(`getItem Id : ${userId}`);
     const res = {};
