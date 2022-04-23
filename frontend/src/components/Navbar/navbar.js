@@ -42,12 +42,26 @@ export default function NavBar() {
     }
     useEffect(() => {
         const userId = localStorage.getItem('userId')
+        const shopId = localStorage.getItem('shopId')
         var details = {
             userId: userId
         }
         if (userId) {
             dispatch(getCart(details))
         }
+       // if(shopId){
+            axios.post(`${backendUrl}/api/getShopDetailsbyUserId`,details )
+            .then(response => {
+                console.log("Status Code for shopId: ", response);
+                if (response.status === 200) {
+                    if(response.data){
+                        localStorage.setItem("shopId",response.data._id)
+                    }
+                }
+              
+            });
+        
+       
     },[dispatch]);
 
     const handleLogout = () => {
@@ -149,7 +163,9 @@ export default function NavBar() {
                         <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
                             <li><a className="dropdown-item" href="/profile">My Profile</a></li>
                             <li><a className="dropdown-item" href="/purchase">My Purchase</a></li>
-                            <li><a className="dropdown-item" href="/createShopName">Shop</a></li>
+                            {localStorage.getItem("shopId")?<li><a className="dropdown-item" href="/createShopName">Shop</a></li>:<li><a className="dropdown-item" href="/shopHome">Shop</a></li>}
+
+                            {/* <li><a className="dropdown-item" href="/createShopName">Shop</a></li> */}
                             <li><a className="dropdown-item" href="/cart">Cart</a></li>
 
                             {/* <li><Link to='/profile'>My Purchase</Link></li> */}

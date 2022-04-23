@@ -6,7 +6,7 @@ const handle_request = async (msg, callback) => {
     console.log(`getShopDetailsbyUserId Id : ${userId}`);
     const res = {};
 
-    Shop.find({ userId: userId }, (err, results) => {
+    Shop.findOne({ userId: userId }, (err, results) => {
         if (!err) {
             console.log(results)
             if (results) {

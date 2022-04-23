@@ -9,6 +9,12 @@ import { AddFavouriteIds, GetItems, RemoveFavouriteIds } from '../../redux/Actio
 import backendUrl from "../config";
 
 function DashBoard() {
+    const [currency, setCurrency] = useState('');
+ const currencyUpdate=(value)=>{
+   localStorage.setItem("currency",value)
+   setCurrency(value)
+}
+
     var items = useSelector((state) => state.items)
     var isLoggedIn = useSelector((state) => state.isLoggedIn)
     var favIds = useSelector((state) => state.favIds)
@@ -34,7 +40,7 @@ function DashBoard() {
         if(!items){
             dispatch(GetItems())
         }
-    }, [dispatch, isLoggedIn, items])
+    }, [dispatch, isLoggedIn, items,currency])
    
 
     const HandleFavourite = (e) => {
@@ -89,7 +95,7 @@ function DashBoard() {
                     </div>
                     <div className="part-2" >
                         <h3 className="product-title text-start"><strong>Item Name: </strong>{item.itemName}</h3>
-                        <h4 className="product-price text-start" ><strong>Price : </strong> {item.currency ? item.currency.split('-')[0] : null}{item.price}</h4>
+                        <h4 className="product-price text-start" ><strong>Price : </strong> {currency?currency:'$'} {item.price}</h4>
                     </div>
                 </div>
             </div>
@@ -105,7 +111,7 @@ function DashBoard() {
                     </div>
                 </div>
             </section>
-            <Footer />
+            <Footer onChange={currencyUpdate} />
         </div>
     )
 }

@@ -1,8 +1,9 @@
 const express = require('express')
 const con = require('../databse');
-const { GETCART_TOPIC, CHECKOUT_TOPIC, ADDTOCART_TOPIC } = require('../kafka/topics');
+const { GETCART_TOPIC, CHECKOUT_TOPIC, ADDTOCART_TOPIC, REMOVEITEMFROMCART_TOPIC, UPDATEQUNATITY_TOPIC } = require('../kafka/topics');
 const router = new express.Router()
 var kafka = require("../kafka/client");
+const { UPDATE_ITEM_FROM_CART } = require('../../frontend/src/redux/Actions/constants');
 
 router.post('/api/getCart1', function (req, res) {
     console.log("inside the cart Name")
@@ -199,6 +200,44 @@ router.post("/api/addToCart", async (req, res) => {
     console.log("Req Body : ", req.body);
 
     kafka.make_request(ADDTOCART_TOPIC, req.body, function (err, results) {
+        console.log("In make request call back");
+        console.log(results);
+        console.log(err);
+        if (err) {
+            console.log("Inside err");
+            console.log(err);
+            return res.status(err.status).send(err.message);
+        } else {
+            console.log("Inside else");
+           // console.log(results);
+            return res.status(results.status).send(results.data);
+        }
+    });
+});
+router.post("/api/removeItemFromCart", async (req, res) => {
+    console.log("checkOut");
+    console.log("Req Body : ", req.body);
+
+    kafka.make_request(REMOVEITEMFROMCART_TOPIC, req.body, function (err, results) {
+        console.log("In make request call back");
+        console.log(results);
+        console.log(err);
+        if (err) {
+            console.log("Inside err");
+            console.log(err);
+            return res.status(err.status).send(err.message);
+        } else {
+            console.log("Inside else");
+           // console.log(results);
+            return res.status(results.status).send(results.data);
+        }
+    });
+});
+router.post("/api/updateQunatity", async (req, res) => {
+    console.log("updateQunatity");
+    console.log("Req Body : ", req.body);
+
+    kafka.make_request(UPDATEQUNATITY_TOPIC, req.body, function (err, results) {
         console.log("In make request call back");
         console.log(results);
         console.log(err);
