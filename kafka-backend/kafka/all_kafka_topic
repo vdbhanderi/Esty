@@ -23,3 +23,4 @@ bin/kafka-topics.sh --create --topic  updateItem_topic --bootstrap-server localh
 bin/kafka-topics.sh --create --topic  updateShop_topic --bootstrap-server localhost:9092
 bin/kafka-topics.sh --create --topic  updateQunatity_topic --bootstrap-server localhost:9092
 bin/kafka-topics.sh --create --topic  removeItemFromCart_topic --bootstrap-server localhost:9092
+bin/kafka-topics.sh --create --topic  login_topic --bootstrap-server localhost:9092

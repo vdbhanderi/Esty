@@ -36,7 +36,7 @@ export default function NavBar() {
     var userInfo = useSelector((state) => state.userInfo)
     var cart = useSelector((state) => state.cart)
     const dispatch = useDispatch()
-    const userId=localStorage.getItem('cartId');
+    const userId=localStorage.getItem('userId');
     if(cart){
         localStorage.setItem('cartId',cart.cartId)
     }
@@ -65,10 +65,8 @@ export default function NavBar() {
     },[dispatch]);
 
     const handleLogout = () => {
-        cookie.remove('cookie', { path: '/' })
         console.log("Inside logout");
         localStorage.clear();
-        cookie.remove("auth")
         // window.location.href = "/";
         window.location.reload();
 
