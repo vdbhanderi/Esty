@@ -1,5 +1,3 @@
-import React, { useEffect, useState } from 'react';
-//import React, { useState } from 'react';
 var footerstyle = {
   bottom: 0,
   position: "fixed",
@@ -7,7 +5,8 @@ var footerstyle = {
 }
 var currencyStyle = {
   "marginLeft":"50px",
-  "marginTop":"10px"
+  "marginTop":"10px",
+  "marginBottom":"20px"
 }
 export default function Footer(props) {
 
@@ -19,7 +18,7 @@ const currencyUpdate=(e)=>{
   return (
     <footer className="text-center text-lg-start bg-light text-muted" style={footerstyle}>
       <div className='row'>
-        <div className="form-group col-md-2" style={currencyStyle}>
+        <div className="form-group col-md-2 col" style={currencyStyle}>
           <label className="small mb-1" htmlFor="country">Currency</label>
           <select id="country" name='country' className="form-control" onChange={currencyUpdate}>
             <option defaultValue="USA" value="$">$ - USA Dollars</option>
@@ -27,12 +26,13 @@ const currencyUpdate=(e)=>{
             <option key="Brazil" value="£">£ - Pounds</option>
           </select>
         </div>
-      </div>
-
-      <div className="text-center p-4">
+        <div className="text-center p-4 col" style={{"marginTop":"20px"}}>
         © 2022 Copyright:
         <a className="text-reset fw-bold" href="https://SJSU.edu/">SJSU</a>
       </div>
+      </div>
+
+      
     </footer>
   );
 }

@@ -2,21 +2,19 @@ const app = require("./app");
 const bodyParser = require('body-parser');
 const passport = require("passport");
 //const jwt = require("jsonwebtoken");
-const cookieParser = require('cookie-parser')
+const cookieParser = require('cookie-parser');
 const path = require('path');
 const fs = require('fs');
 const multer = require('multer');
 const {uploadFile,downloadFile}=require('./s3');
 app.set('view engine', 'ejs');
+//require('./config/passport')(passport);
 
-
+app.use(passport.initialize());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(cookieParser());
 
-app.get('/', (req, res) => {
-  res.render('login')
-})
 //Storing documents/Images
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {

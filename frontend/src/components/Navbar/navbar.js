@@ -32,6 +32,7 @@ const RegisterSchema = Yup.object().shape({
 });
 export default function NavBar() {
     const [search, setSearch] = useState("");
+    const [isUpdated, setisUpdated] = useState("");
     var isLoggedIn = useSelector((state) => state.isLoggedIn)
     var userInfo = useSelector((state) => state.userInfo)
     var cart = useSelector((state) => state.cart)
@@ -59,11 +60,22 @@ export default function NavBar() {
                     }
                 }
               
+            });     
+    },[dispatch,isUpdated]);
+    useEffect(() => {
+        console.log("inside userId")
+        localStorage.setItem("currency","$")
+        let data = {
+            userId: localStorage.getItem("userId")
+        }
+        axios.post(`${backendUrl}/api/getProfile`, data)
+            .then((response) => {
+                if (response.data.favouriteIds) {
+                    //setFavIds(response.data.favouriteIds);
+                     localStorage.setItem("favIds",(response.data.favouriteIds))
+                }
             });
-        
-       
-    },[dispatch]);
-
+    }, [])
     const handleLogout = () => {
         console.log("Inside logout");
         localStorage.clear();
@@ -111,6 +123,9 @@ export default function NavBar() {
         console.log("Inside submit login");
         localStorage.setItem("search", search)
     }
+    const HandleHome = () => {
+        localStorage.setItem("search", "")
+    }
     const submitRegister = (details) => {
         console.log("Inside submit register", details);
 
@@ -124,12 +139,9 @@ export default function NavBar() {
                 if (response.status === 200) {
                     console.log("status is 200 redirect page");
                     console.log("signup response api" + response.data);
-                    localStorage.setItem("userId", response.data)
-                    cookie.save("auth", true, {
-                        path: "/",
-                        httpOnly: false,
-                        maxAge: 90000,
-                    });
+                    localStorage.setItem("userId", response.data._id)
+                    localStorage.setItem("token", response.data.token)
+                    setisUpdated(true)
                 }
                 else if (response.status === 204) {
                     alert("Email Id already exists")
@@ -161,7 +173,7 @@ export default function NavBar() {
                         <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
                             <li><a className="dropdown-item" href="/profile">My Profile</a></li>
                             <li><a className="dropdown-item" href="/purchase">My Purchase</a></li>
-                            {localStorage.getItem("shopId")?<li><a className="dropdown-item" href="/createShopName">Shop</a></li>:<li><a className="dropdown-item" href="/shopHome">Shop</a></li>}
+                            {!localStorage.getItem("shopId")?<li><a className="dropdown-item" href="/createShopName">Shop</a></li>:<li><a className="dropdown-item" href={"/shopHome/"+localStorage.getItem("shopId")}>Shop</a></li>}
 
                             {/* <li><a className="dropdown-item" href="/createShopName">Shop</a></li> */}
                             <li><a className="dropdown-item" href="/cart">Cart</a></li>
@@ -323,7 +335,7 @@ export default function NavBar() {
         <header id="header">
             {/* {this.state.redirectVar} */}
             <nav className="navbar shadow-sm bg-white rounded navbar-dark bg-white text-left navbar-expand-lg">
-                <a className="navbar-brand ms5" href="/">
+                <a className="navbar-brand ms5" href="/" onClick={HandleHome}>
                     <h1 className="font-weight-bold" >&nbsp; Esty</h1>
                 </a>
                 <form className="d-inline-flex col-md-8 p-2">

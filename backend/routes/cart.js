@@ -3,7 +3,7 @@ const con = require('../databse');
 const { GETCART_TOPIC, CHECKOUT_TOPIC, ADDTOCART_TOPIC, REMOVEITEMFROMCART_TOPIC, UPDATEQUNATITY_TOPIC } = require('../kafka/topics');
 const router = new express.Router()
 var kafka = require("../kafka/client");
-const { UPDATE_ITEM_FROM_CART } = require('../../frontend/src/redux/Actions/constants');
+const { checkAuth } = require('../config/passport');
 
 router.post('/api/getCart1', function (req, res) {
     console.log("inside the cart Name")
@@ -91,7 +91,7 @@ router.post('/api/checkOut1', function (req, res) {
         }
     });
 });
-router.post("/api/checkOut", (req, res) => {
+router.post("/api/checkOut",(req, res) => {
     console.log("checkOut");
     console.log("Req Body : ", req.body);
 
@@ -195,7 +195,7 @@ router.post("/api/addToCart1", (req, res) => {
     }
 
 });
-router.post("/api/addToCart", async (req, res) => {
+router.post("/api/addToCart",async (req, res) => {
     console.log("checkOut");
     console.log("Req Body : ", req.body);
 
@@ -214,7 +214,7 @@ router.post("/api/addToCart", async (req, res) => {
         }
     });
 });
-router.post("/api/removeItemFromCart", async (req, res) => {
+router.post("/api/removeItemFromCart",async (req, res) => {
     console.log("checkOut");
     console.log("Req Body : ", req.body);
 
@@ -228,12 +228,12 @@ router.post("/api/removeItemFromCart", async (req, res) => {
             return res.status(err.status).send(err.message);
         } else {
             console.log("Inside else");
-           // console.log(results);
+            console.log(results);
             return res.status(results.status).send(results.data);
         }
     });
 });
-router.post("/api/updateQunatity", async (req, res) => {
+router.post("/api/updateQunatity",async (req, res) => {
     console.log("updateQunatity");
     console.log("Req Body : ", req.body);
 

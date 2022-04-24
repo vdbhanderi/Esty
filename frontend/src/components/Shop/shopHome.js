@@ -16,11 +16,11 @@ const UpdateShopSchema = Yup.object().shape({
     itemName: Yup.string()
         .required("Item Name is required")
         .min(4, "Item names must have 4–20 characters")
-        .max(20, "Item names must have 4–20 characters"),
+        .max(30, "Item names must have 4–30 characters"),
     description: Yup.string()
         .required("description is required")
-        .min(5, "description must have 4–20 characters")
-        .max(20, "description must have 4–20 characters"),
+        .min(5, "description must have 4–50 characters")
+        .max(50, "description must have 4–50 characters"),
 
 });
 

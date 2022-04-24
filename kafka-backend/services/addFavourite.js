@@ -32,7 +32,7 @@ const handle_request = async (msg, callback) => {
             res.status = 500;
             callback(null, 'error');
         }
-    })
+    }).clone()
 
 }
 

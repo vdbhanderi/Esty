@@ -19,7 +19,7 @@ const handle_request = async (msg, callback) => {
         }
 
         console.log("Updated items", items)
-        totalamount = 0;
+        var totalamount = 0;
         items.forEach(i => {
             totalamount += (i.price * i.quantity)
         });

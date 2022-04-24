@@ -6,6 +6,7 @@ import {  REMOVE_ITEM_FROM_CART, ADD_TO_CART,ADD_TO_CART_ERROR, GET_CART,GET_CAR
 export const addToCart = (details) => (dispatch) => {
   console.log("addtocart dispatch")
   axios.defaults.withCredentials = true;
+  axios.defaults.headers.common['authorization'] = localStorage.getItem('token');
   axios.post(`${backendUrl}/api/addToCart`, details)
     .then((response) => {dispatch({
       type: ADD_TO_CART,
@@ -28,12 +29,13 @@ export const removeFromCart = (details) => (dispatch) => {
   console.log("removeFromCart dispatch")
   axios.defaults.withCredentials = true;
   axios.post(`${backendUrl}/api/removeItemFromCart`, details)
-    .then((response) => {dispatch({
+    .then((response) => {
+      console.log("data from remove cart",response.data);
+      dispatch({
       type: GET_CART,
       payload: response.data,
     })
     console.log("response of reducer",response.status)
-    if(response.status === 204) { alert("username or password is not correct")};
   }
     )
     .catch((error) => {

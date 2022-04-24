@@ -14,15 +14,20 @@ const handle_request = async (msg, callback) => {
             var newItems=existingItems.filter(x=>x.itemId!=itemId);
             console.log(newItems)
             console.log(newItems.length > 0)
+            var totalamount=0;
             if(newItems.length > 0){
                 newItems.forEach(i => {
                     totalamount += (i.price * i.quantity)
                 });
                 cart.findByIdAndUpdate(result._id,{items:newItems,totalamount:totalamount},(err,result2)=>{
                     if(!err){
+                        data = {
+                            cartId: result._id,
+                            items: newItems
+                        }
+                        console.log("updated result")
                         res.status = 200;
-                        console.log(result2)
-                        //res.data = JSON.stringify(oldfavouriteIds);
+                        res.data = JSON.stringify(data);
                         callback(null, res)
                     }
                     else{
