@@ -1,0 +1,4 @@
+[2022-04-23 19:38:10,651] WARN fsync-ing the write ahead log in SyncThread:0 took 1057ms which will adversely effect operation latency.File size is 67108880 bytes. See the ZooKeeper troubleshooting guide (org.apache.zookeeper.server.persistence.FileTxnLog)
+[2022-04-23 19:49:00,082] INFO Creating new log file: log.21105 (org.apache.zookeeper.server.persistence.FileTxnLog)
+[2022-04-23 19:49:00,082] INFO Snapshotting: 0x21103 to /tmp/zookeeper/version-2/snapshot.21103 (org.apache.zookeeper.server.persistence.FileTxnSnapLog)
+[2022-04-23 19:49:00,382] INFO Snapshot taken in 310 ms (org.apache.zookeeper.server.ZooKeeperServer)
