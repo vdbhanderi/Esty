@@ -7,6 +7,6 @@
         "database":"test_db"
 
     },
-    "frontendURL":"http://localhost:3001",
+    "frontendURL":"http://54.196.190.231:3001",
     "secretkey":"virag"
 }
