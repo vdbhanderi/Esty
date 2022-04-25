@@ -20,3 +20,12 @@ $ cd backend
 $ npm install
 
 $ npm start
+
+Kafka Backend
+
+$ cd kafka-backend
+
+$ npm install
+
+$ npm start
+
