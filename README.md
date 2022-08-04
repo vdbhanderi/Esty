@@ -27,5 +27,5 @@ $ cd kafka-backend
 
 $ npm install
 
-$ npm start
+$ npm start  
 
