@@ -1,12 +1,12 @@
 {
     "DB":{
-        "host":"estynewdb.cb1ycgh0w0rf.us-east-1.rds.amazonaws.com",
-        "username":"admin",
-        "password":"Passb00k",
+        "host":"",
+        "username":"",
+        "password":"",
         "port":3306,
-        "database":"test_db"
+        "database":""
 
     },
     "frontendURL":"http://54.91.242.150:3001",
-    "secretkey":"virag"
+    "secretkey":""
 }
